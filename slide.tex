@@ -2,7 +2,7 @@
 
 \usetheme{metropolis}
 
-\metroset{sectionpage=progressbar,progressbar=frametitle}
+\metroset{sectionpage=none,progressbar=frametitle,subsectionpage=progressbar}
 \metroset{numbering=fraction}
 \metroset{block=fill}
 
@@ -104,6 +104,8 @@
 \begin{document}
 \maketitle
 
+
+
 \section{Introduzione e instradamento socialmente ottimo}
 
 \subsection{Definizioni ed esempi}
@@ -122,10 +124,10 @@
   \item (costo economico).
   \end{itemize}
 
-  Comportamenti:
+  Tipi di comportamento:
   \begin{itemize}
   \item Socialmente ottimo,
-  \item anarchia,
+  \item anarchico,
   \item parzialmente ottimo.
   \end{itemize}
 \end{frame}
@@ -168,14 +170,13 @@
     \end{tikzpicture}
   \end{center}
   \begin{columns}[T]
-    \begin{column}{.45\textwidth}
+    \begin{column}{.6\textwidth}
       \begin{itemize}
       \item<1-> Grafo diretto $(V,A)$,
-      \item<2-> traffico,
-      \item<3-> costi.
+      \item<2-> traffico (infinitamente divisibile),
       \end{itemize}
     \end{column}
-    \begin{column}{.45\textwidth}
+    \begin{column}{.35\textwidth}
       \begin{itemize}
       \item<3-> costi.
       \end{itemize}
@@ -188,19 +189,21 @@
   $R=(V,A,P,s,t,X,l)$ con:
   \begin{itemize}
   \item $(V,A)$ il grafo diretto,
-  \item $s = \bra{s_i}$ vettore delle sorgenti,
-  \item $t = \bra{t_i}$ vettore delle destinazioni,
-  \item $P = \cup _i P_i$ con $P_i$ insieme dei
+  \item $s = \bra{s_i}_{i\in W}$ vettore delle sorgenti (per un opportuno $W$),
+  \item $t = \bra{t_i}_{i\in W}$ vettore delle destinazioni,
+  \item $P = \cup _{i\in W} P_i$ con $P_i$ insieme dei
     percorsi da $s_i$ a $t_i$,
-  \item $X = \bra{X_i}$ dove $X_i$ rappresenta la quantità di
+  \item $X = \bra{X_i}_{i\in W}$ dove $X_i$ rappresenta la quantità di
     traffico da instradare da $s_i$ a $t_i$,
-  \item $l = \bra{l_j}$ dove $l_j(x_j)$ è il costo del link
+  \item $l = \bra{l_j}_{j\in A}$ dove $l_j(x_j)$ è il costo del link
     $j$ con un traffico $x_j$.
   \end{itemize}
   
   Indichiamo con $\mathcal{R}$ l'insieme di tutte le istanze, con
   $\mathcal{R}^{aff},\mathcal{R}^{conv},$ i sottoinsiemi delle istanze con
-  le $l_i$ rispettivamente affine e convesse.
+  le $l_j$ rispettivamente affine e convesse.
+
+  Supponiamo che le $l_j$ siano non negative e non decrescenti.
 \end{frame}
 
 \begin{frame}{Soluzione di un'instanza e suo costo}
@@ -208,8 +211,8 @@
   $x = \bra{x_j} \cup \bra{x_p}$ è soluzione se:
   \begin{itemize}
   \item $\displaystyle \forall p\in P\;\; x_p \ge 0$,
-  \item $\displaystyle \forall j\in A\;\; x_j = \sum_{p\in P,j\in p} x_p$,
-  \item $\displaystyle \forall i\;\; \sum_{p\in P_i} x_p = X_i$
+  \item $\displaystyle \forall j\in A\;\; x_j = \sum_{p\in P,p\ni j} x_p$,
+  \item $\displaystyle \forall i\in W\;\; \sum_{p\in P_i} x_p = X_i$.
   \end{itemize}
   
   Il costo (globale) della soluzione sarà dato da:
@@ -218,6 +221,44 @@
 
 \subsection{Instradamento socialmente ottimo}
 
+\begin{frame}{Instradamento socialmente ottimo}
+  \begin{mydef}[Instradamento socialmente ottimo]
+    Diciamo che una soluzione $x$ di $R \in \mathcal{R}$ è
+    \textbf{socialmente ottima} se minimizza la funzione costo
+    $C(x) = \sum_{j\in A} l_j(x_j)x_j$, indichiamo una tale soluzione
+    con $x^{SO}(R)$.
+  \end{mydef}
+  \[
+    \begin{matrix}
+      \text{minimizzare} & \sum _{j\in A} x_j l_j(x_j) \\
+      \text{tale che} &   x_p \ge 0 & p\in P \\
+      & x_j = \sum_{p\in P,p\ni j} x_p & j\in A \\
+      &\sum_{p\in P_i} x_p = X_i & i\in W
+    \end{matrix}
+  \]
+  \begin{myoss}
+    I vincoli sono tutti lineari.
+  \end{myoss}
+  \begin{myoss}
+    La soluzione potrebbe non essere unica.
+  \end{myoss}
+\end{frame}
+
+\begin{frame}{Esempio di Pigou}
+  \begin{center}
+    \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70}]
+      \node[mnode] (1) at (0,0) {s}; 
+      \node[mnode] (2) at (3,0) {t};
+      \draw [->] (1) to [bend left] node[above] {$l_1(x) = x$} (2);
+      \draw [->] (1) to [bend right] node[below] {$l_2(x) = 1$} (2);
+      \draw [->,color=red] (-4,0) -- node[above] {1 unità di traffico} (1) ;
+      \draw [->,color=red] (2) --  (5,0) ;
+      \node at (7,0) {};
+    \end{tikzpicture}
+  \end{center}
+  La soluzione ottima è $x_1 = x_2 = \frac{1}{2}$ con costo
+  \[ C(x) = \frac{1}{4} + \frac{1}{2} = \frac{3}{4} \]
+\end{frame}
 
 \section{Equilibrio di Wardrop}
 
