@@ -6,13 +6,13 @@
 \metroset{numbering=fraction}
 \metroset{block=fill}
 
-\usepackage{pgfpages}
+%\usepackage{pgfpages}
 %\setbeameroption{show notes on second screen}
 
 \usepackage{appendixnumberbeamer}
 
 \usepackage[utf8x]{inputenc}
-\usepackage[english]{babel}
+\usepackage[italian]{babel}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -23,29 +23,28 @@
 \usepackage{hyperref}
 \usepackage{mathtools}
 
-% Plot e disegnini
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.14}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
 
 % to do small font tabular columns
-\usepackage{array}
+%\usepackage{array}
 
 
 \newcounter{counter1}
 
 \theoremstyle{plain}
-\newtheorem{myteo}[counter1]{Theorem}
+\newtheorem{myteo}[counter1]{Teorema}
 \newtheorem{mylem}[counter1]{Lemma}
-\newtheorem{mypro}[counter1]{Proposition}
-\newtheorem{mycor}[counter1]{Corollary}
+\newtheorem{mypro}[counter1]{Proposizione}
+\newtheorem{mycor}[counter1]{Corollario}
 %\newtheorem*{myteo*}{Teorema}
 %\newtheorem*{mylem*}{Lemma}
 %\newtheorem*{mypro*}{Proposizione}
 %\newtheorem*{mycor*}{Corollario}
 
 \theoremstyle{definition}
-\newtheorem{mydef}[counter1]{Definition}
-\newtheorem{myes}[counter1]{Example}
+\newtheorem{mydef}[counter1]{Definizione}
+\newtheorem{myes}[counter1]{Esempio}
 %\newtheorem{myex}[counter1]{Esercizio}
 %\newtheorem*{mydef*}{Definizione}
 %\newtheorem*{myes*}{Esempio}
@@ -53,7 +52,7 @@
 
 \theoremstyle{remark}
 %\newtheorem{mynot}[counter1]{Nota}
-\newtheorem{myoss}[counter1]{Remark}
+\newtheorem{myoss}[counter1]{Osservazione}
 %\newtheorem*{mynot*}{Nota}
 %\newtheorem*{myoss*}{Osservazione}
 
@@ -108,6 +107,114 @@
 \section{Introduzione e instradamento socialmente ottimo}
 
 \subsection{Definizioni ed esempi}
+
+\begin{frame}{Esempi}
+  Reti:
+  \begin{itemize}
+  \item Reti stradali,
+  \item reti di telecomunicazione (internet).
+  \end{itemize}
+
+  Costi:
+  \begin{itemize}
+  \item Tempo di percorrenza (latenza),
+  \item perdita di pacchetti,
+  \item (costo economico).
+  \end{itemize}
+
+  Comportamenti:
+  \begin{itemize}
+  \item Socialmente ottimo,
+  \item anarchia,
+  \item parzialmente ottimo.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Modello}
+  \begin{center}
+    \begin{tikzpicture}[mnode/.style={circle,fill=blue!20},>=latex,snode/.style={circle,fill=red!70}]
+      \node[mnode] (1) at (0,0) {1};
+      \node[mnode] (2) at (2,2) {2};
+      \node[mnode] (3) at (4,2) {3};
+      \node[mnode] (4) at (3,-2) {4};
+      \node[mnode] (5) at (6,0) {5};
+      \draw [->] (1) to [bend left] (2);
+      \onslide<3->{\node at (1,1) {$l_1(x_1)$};}
+      \draw [->] (2) to [bend right] (3);
+      \onslide<3->{\node at (3,2.7) {$l_2(x_2)$};}
+      \draw [->] (3) to [bend right] (2);
+      \onslide<3->{\node at (3,1.3) {$l_3(x_3)$};}
+      \draw [->] (3) to [bend left] (5);
+      \onslide<3->{\node at (5.5,1.7) {$l_4(x_4)$};}
+      \draw [->] (1) to [bend right] (4);
+      \onslide<3->{\node at (0.6,-1.7) {$l_5(x_5)$};}
+      \draw [->] (3) -- (4);
+      \onslide<3->{\node at (4,0) {$l_6(x_6)$};}
+      \draw [->] (4) -- (2);
+      \onslide<3->{\node at (2,0) {$l_7(x_7)$};}
+      \draw [->] (4) to [bend right] (5);
+      \onslide<3->{\node at (5,-1) {$l_8(x_8)$};}
+
+      \onslide<2->{
+        \node[snode] (S1) at (-2,0) {S1};
+        \node[snode] (S2) at (-2,2) {S2};
+        \node[snode] (T1) at (8,0) {T1};
+        \node[snode] (T2) at (8,-2) {T2};
+        \draw[->] (S1) -- node[above]{traffico 1} (1);
+        \draw[->] (5) -- node[above]{traffico 1} (T1);
+        \draw[->] (S2) -- node[above]{traffico 2} (2);
+        \draw[->] (4) -- node[below]{traffico 2} (T2);
+      }
+    \end{tikzpicture}
+  \end{center}
+  \begin{columns}[T]
+    \begin{column}{.45\textwidth}
+      \begin{itemize}
+      \item<1-> Grafo diretto $(V,A)$,
+      \item<2-> traffico,
+      \item<3-> costi.
+      \end{itemize}
+    \end{column}
+    \begin{column}{.45\textwidth}
+      \begin{itemize}
+      \item<3-> costi.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Istanza}
+  Un'instanza di instradamento (\textit{routing instance}) è
+  $R=(V,A,P,s,t,X,l)$ con:
+  \begin{itemize}
+  \item $(V,A)$ il grafo diretto,
+  \item $s = \bra{s_i}$ vettore delle sorgenti,
+  \item $t = \bra{t_i}$ vettore delle destinazioni,
+  \item $P = \cup _i P_i$ con $P_i$ insieme dei
+    percorsi da $s_i$ a $t_i$,
+  \item $X = \bra{X_i}$ dove $X_i$ rappresenta la quantità di
+    traffico da instradare da $s_i$ a $t_i$,
+  \item $l = \bra{l_j}$ dove $l_j(x_j)$ è il costo del link
+    $j$ con un traffico $x_j$.
+  \end{itemize}
+  
+  Indichiamo con $\mathcal{R}$ l'insieme di tutte le istanze, con
+  $\mathcal{R}^{aff},\mathcal{R}^{conv},$ i sottoinsiemi delle istanze con
+  le $l_i$ rispettivamente affine e convesse.
+\end{frame}
+
+\begin{frame}{Soluzione di un'instanza e suo costo}
+  Data un'instanza $R=(V,A,P,s,t,X,l)$ un vettore
+  $x = \bra{x_j} \cup \bra{x_p}$ è soluzione se:
+  \begin{itemize}
+  \item $\displaystyle \forall p\in P\;\; x_p \ge 0$,
+  \item $\displaystyle \forall j\in A\;\; x_j = \sum_{p\in P,j\in p} x_p$,
+  \item $\displaystyle \forall i\;\; \sum_{p\in P_i} x_p = X_i$
+  \end{itemize}
+  
+  Il costo (globale) della soluzione sarà dato da:
+  \[ C(x) = \sum_{j\in A} l_j(x_j)x_j \]
+\end{frame}
 
 \subsection{Instradamento socialmente ottimo}
 
