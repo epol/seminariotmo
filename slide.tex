@@ -258,11 +258,161 @@
   \end{center}
   La soluzione ottima è $x_1 = x_2 = \frac{1}{2}$ con costo
   \[ C(x) = \frac{1}{4} + \frac{1}{2} = \frac{3}{4} \]
+  Metà del traffico arriverà con una latenza $\frac{1}{2}$ e metà con
+  latenza $1$.
 \end{frame}
 
 \section{Equilibrio di Wardrop}
 
 \subsection{Teoria dei giochi}
+
+\begin{frame}{Definizione}
+  \begin{mydef}[Gioco strategico]
+    Un gioco è dato da $\pa{\mathcal{I},\pa{S_i}_{i\in\mathcal{I}},
+      \pa{u_i}_{i\in\mathcal{I}}}$ con:
+    \begin{itemize}
+    \item $\mathcal{I}$ insieme \textbf{finito} dei giocatori,
+    \item $S_i$ insieme non vuoto delle azioni possibili per il
+      giocatore $i$,
+    \item $u_i: \prod _{i\in\mathcal{I}} S_i \to \mathbb{R}$ guadagno
+      per il giocatore $i$ in funzione delle azioni di tutti i
+      giocatori.
+    \end{itemize}
+  \end{mydef}
+  L'obiettivo di ogni giocatore è di massimizzare il proprio guadagno.
+
+  Definiamo:
+  \begin{itemize}
+  \item $S = \prod _{i\in\mathcal{I}} S_i$,
+  \item se $s = \bra{s_i}_{i\in\mathcal{I}} \in S$ allora $s_{-i} =
+    \bra{s_j}_{j\neq i}$
+  \item $\displaystyle S_{-i} = \prod _{j\in\mathcal{I},j\neq i} S_i$,
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Esempio}
+  In \textbf{matching pennies} ogni giocatore sceglie se mostrare una
+  moneta con testa o croce, se le monete sono uguali vince il primo
+  giocatore, se sono diverse il secondo.
+  
+  \begin{columns}[T]
+    \begin{column}{0.4\textwidth}
+      \[ \mathcal{I} = \set{1,2} \]
+      \[ S_1 = S_2 = \set{\text{Testa},\text{Croce}} \]
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \begin{tabular}{rcc}
+        & Testa & Croce \\
+        \cline{2-3}
+        Testa & \multicolumn{1}{|c|}{$1,-1$} & \multicolumn{1}{|c|}{$-1,1$}  \\
+        \cline{2-3}
+        Croce & \multicolumn{1}{|c|}{$-1,1$} & \multicolumn{1}{|c|}{$1,-1$}  \\
+        \cline{2-3}
+      \end{tabular}
+      \[ u_1,u_2 \]
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Strategie}
+  \begin{mydef}[Strategia dominante]
+    Per un giocatore $i\in\mathcal{I}$ un'azione $s_i\in S_i$ è una
+    strategia dominante se:
+    \[ \forall s_{-i} \in S_{-i}\;\; \forall s_i' \in S_i\;\;\;
+      u_i\pa{s_i,s_{-i}} \ge u_i\pa{s_i',s_{-i}} \]
+  \end{mydef}
+
+  Ci aspettiamo che un giocatore razionale giochi una strategia
+  dominante, se esiste.
+\end{frame}
+
+\begin{frame}{Dilemma del prigioniero}
+  Due criminali vengono arrestati per aver commesso un reato, hanno a
+  disposizione due scelte: collaborare o non collaborare con la
+  polizia.
+
+  \begin{tabular}{rcc}
+    & Non collaborare & Collaborare \\
+    \cline{2-3}
+    Non collaborare & \multicolumn{1}{|c|}{$-2,-2$} & \multicolumn{1}{|c|}{$-5,-1$}  \\
+    \cline{2-3}
+    Collaborare & \multicolumn{1}{|c|}{$-1,-5$} & \multicolumn{1}{|c|}{$-4,-4$}  \\
+    \cline{2-3}
+  \end{tabular}
+
+  \begin{block}{Strategia dominante}
+    Per entrambi la strategia ``collaborare'' è una strategia dominante.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Equilibrio di Nash}
+  Sia  $\pa{\mathcal{I},\pa{S_i}_{i\in\mathcal{I}},
+    \pa{u_i}_{i\in\mathcal{I}}}$ un gioco.
+  \begin{mydef}[Equilibrio di Nash]
+    $s^* \in S$ è un equilibrio di Nash se
+    \[ \forall i\in \mathcal{I}\;\; \forall s_i \in S_i \;\;\;
+      u_i\pa{s^*_i,s^*_{-i}} \ge u_i\pa{s_i,s^*_{-i}} \]
+  \end{mydef}
+
+  Nessun giocatore è interessato a spostarsi da un equilibrio di Nash.
+\end{frame}
+
+\begin{frame}{Dilemma del prigioniero con suicidio}
+    \begin{tabular}{rccc}
+    & Non collaborare & Collaborare & Suicidarsi \\
+    \cline{2-4}
+    Non collaborare & \multicolumn{1}{|c|}{$-2,-2$} & \multicolumn{1}{|c|}{$-5,-1$} & \multicolumn{1}{|c|}{$0,-20$}  \\
+    \cline{2-4}
+    Collaborare & \multicolumn{1}{|c|}{$-1,-5$} & \multicolumn{1}{|c|}{$-4,-4$}  & \multicolumn{1}{|c|}{$-4,-20$} \\
+    \cline{2-4}
+    Suicidarsi & \multicolumn{1}{|c|}{$-20,0$} & \multicolumn{1}{|c|}{$-20,-4$}  & \multicolumn{1}{|c|}{$-20,-20$} \\
+    \cline{2-4}
+  \end{tabular}
+  \vfill
+  
+  In questo caso non c'è una strategia dominante.
+
+  \begin{block}{Equilibrio di Nash}
+    $\pa{\text{Collaborare},\text{Collaborare}}$ è un equilibrio di Nash.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Esempi}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \begin{tabular}{rcc}
+        & Testa & Croce \\
+        \cline{2-3}
+        Testa & \multicolumn{1}{|c|}{$1,-1$} & \multicolumn{1}{|c|}{$-1,1$}  \\
+        \cline{2-3}
+        Croce & \multicolumn{1}{|c|}{$-1,1$} & \multicolumn{1}{|c|}{$1,-1$}  \\
+        \cline{2-3}
+      \end{tabular}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      In \textbf{matching pennies} non esiste alcun equilibrio di Nash.
+    \end{column}
+  \end{columns}
+  \vfill
+  
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \begin{tabular}{rcc}
+        & Opera & Football \\
+        \cline{2-3}
+        Opera & \multicolumn{1}{|c|}{$2,1$} & \multicolumn{1}{|c|}{$0,0$}  \\
+        \cline{2-3}
+        Football & \multicolumn{1}{|c|}{$0,0$} & \multicolumn{1}{|c|}{$1,2$}  \\
+        \cline{2-3}
+      \end{tabular}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      Nella \textbf{battaglia dei sessi} esistono due equilibri di
+      Nash: $\pa{\text{Opera},\text{Opera}}$ e
+      $\pa{\text{Football},\text{Football}}$.
+    \end{column}
+  \end{columns}
+\end{frame}
 
 \subsection{Equilibrio di Wardrop}
 
