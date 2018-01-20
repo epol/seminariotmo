@@ -129,7 +129,7 @@
   Tipi di comportamento:
   \begin{itemize}
   \item Socialmente ottimo,
-  \item anarchico,
+  \item anarchico (equilibrio di Wardrop),
   \item parzialmente ottimo.
   \end{itemize}
 \end{frame}
@@ -187,7 +187,7 @@
 \end{frame}
 
 \begin{frame}{Istanza}
-  Un'instanza di instradamento (\textit{routing instance}) è
+  Un'istanza di instradamento (\textit{routing instance}) è
   $R=(V,A,P,s,t,X,l)$ con:
   \begin{itemize}
   \item $(V,A)$ il grafo diretto,
@@ -201,15 +201,16 @@
     $j$ con un traffico $x_j$.
   \end{itemize}
   
+  Supponiamo che le funzioni $l_j$ siano \textbf{non negative},
+  \textbf{continue} e \textbf{non decrescenti}.
+
   Indichiamo con $\mathcal{R}$ l'insieme di tutte le istanze, con
   $\mathcal{R}^{aff},\mathcal{R}^{conv},$ i sottoinsiemi delle istanze con
   le $l_j$ rispettivamente affine e convesse.
-
-  Supponiamo che le $l_j$ siano non negative e non decrescenti.
 \end{frame}
 
-\begin{frame}{Soluzione di un'instanza e suo costo}
-  Data un'instanza $R=(V,A,P,s,t,X,l)$ un vettore
+\begin{frame}{Soluzione di un'istanza e suo costo}
+  Data un'istanza $R=(V,A,P,s,t,X,l)$ un vettore
   $x = \bra{x_j} \cup \bra{x_p}$ è soluzione se:
   \begin{itemize}
   \item $\displaystyle \forall p\in P\;\; x_p \ge 0$,
@@ -357,6 +358,13 @@
   \end{mydef}
 
   Nessun giocatore è interessato a spostarsi da un equilibrio di Nash.
+
+  \begin{myoss}
+    Se ogni giocatore ha a disposizione una strategia dominante allora
+    l'insieme delle strategie dominanti è un equilibrio di Nash.
+
+    Il viceversa in generale è falso.
+  \end{myoss}
 \end{frame}
 
 \begin{frame}{Dilemma del prigioniero con suicidio}
@@ -506,7 +514,7 @@
 \end{frame}
 
 \begin{frame}{Equilibrio di Wardrop}
-  \begin{mydef}[Equilibrio di Wardrop]
+  \begin{mydef}[Equilibrio di Wardrop per singola origine-destinazione]
     Una soluzione $x$ di $R\in \mathcal{R}$ è un \textbf{equilibrio di
       Wardrop} se
     \[
@@ -528,6 +536,126 @@
     l'equilibrio di Wardrop di $R$ coincide con il limite degli equilibri di
     Nash delle $R_n$.
   \end{myteo}
+\end{frame}
+
+\begin{frame}{Teorema di Beckmann, McGuire and Winsten}
+  Manteniamo l'ipotesi di avere un'unica coppia origine-destinazione e
+  supponiamo che il flusso richiesto sia $1$.
+  \begin{myteo}[Beckmann, McGuire and Winsten]
+    Data $R\in \mathcal{R}$ una soluzione $x$ è un equilibrio di
+    Wardrop se e solo se $x$ è una soluzione del problema
+    \begin{align*}
+        \text{minimizzare} \;&  \sum _{j\in A} \int _0 ^ {x_j}
+        l_j(z)\de z \\
+        \text{con} \;& \sum _{p\in P, p\ni j} x_p = x_j&\;\; \forall j\in
+        A\\
+        & \sum _{p\in P} x_p = 1 \\
+        & x_p \ge 0&\;\;\forall p\in P        
+    \end{align*}
+  \end{myteo}
+\end{frame}
+
+\begin{frame}{Teorema di Beckmann, McGuire and Winsten}
+  Scriviamo le funzioni:
+  \begin{align*}
+    f(x) &= \sum _{j\in A} \int _0 ^ {x_j} l_j(z)\de z \\
+    g_p(x) &= -x_p & \forall p\in P \\
+    h_j(x) &= \sum _{p\ni j} x_p -x_j & \forall j\in A\\
+    h(x) &= \sum _{p\in P} x_p -1
+  \end{align*}
+  
+  Il problema diventa minimizzare $f(x)$ con $g_p(x) \le 0$, $h_j(x)
+  =0$ e $h(x) =0$.
+
+  Abbiamo supposto all'inizio le $l_j$ continue, non negative e non
+  decrescenti, quindi $f$ è una funzione convessa.
+\end{frame}
+
+\begin{frame}{Dimostrazione del teorema}
+  \begin{proof}
+    \renewcommand{\qedsymbol}{} Abbiamo già osservato che $f$ è
+    convessa, inoltre i vincoli sono tutti lineari, quindi sappiamo
+    che $x$ è punto di minimo se e solo se sono soddisfatte le KKT in
+    $x$: $\exists \lambda \in \mathbb{R}_+^{\abs{P}}$,
+    $\exists \mu \in \mathbb{R}^{\abs{A}}$,
+    $\exists \theta \in \mathbb{R}$ tali che:
+    \[ 0 = \nabla f(x) + \sum_{p\in P}\lambda _p \nabla g_p(x) + \sum _{j\in
+        A} \mu _j \nabla h_j(x) + \theta \nabla h(x) \]
+    \[ \forall p\in P\;\; \lambda _p g_p(x) = 0 \]
+    \vspace{-20px}
+    \begin{align*}
+      l_j(x_j) - \mu _j =0 && \forall j\in A \\
+      -\lambda _p + \sum _{p\ni j}\mu _j + \theta =0 && \forall p \in
+                                                        P\\
+      \lambda _p x_p =0 && \forall p\in P
+    \end{align*}
+  \end{proof}
+\end{frame}
+
+\begin{frame}{Dimostrazione del teorema}
+  \begin{proof}[Dimostrazione (continua)]
+    Ricaviamo quindi
+    \begin{align*}
+      \sum _{p\ni j} l_j(x_j) &= -\theta + \lambda _p \ge -\theta &
+                                                \forall p\in P  \\
+      x_p > 0 &\Rightarrow \lambda _p =0 & \forall p\in P
+    \end{align*}
+    Da cui:
+    \begin{align*}
+      x_p > 0 & \Rightarrow \sum _{p\ni j} l_j(x_j) = -\theta \\
+      x_p = 0 & \Rightarrow \sum _{p\ni j} l_j(x_j) \ge -\theta
+    \end{align*}
+    queste sono le condizioni dell'equilibrio di Wardrop.
+  \end{proof}
+\end{frame}
+
+\begin{frame}{Equilibrio di Wardrop per più coppie sorgente-destinazione}
+  \begin{mydef}[Equilibrio di Wardrop]
+    Una soluzione $x$ di $R\in \mathcal{R}$ è un \textbf{equilibrio di
+      Wardrop} se per ogni coppia di sorgente-destinazione
+    $(s_i,t_i)$:
+    \begin{align*}
+      \sum _{j\in p'} l_j(x_j) = \sum _{j\in p} l_j(x_j) & & \forall
+                                                             p,p'\in P_i \text{ con } x_p >0, x_{p'} >0 \\
+      \sum _{j\in p'} l_j(x_j) \ge \sum _{j\in p} l_j(x_j) & & \forall
+                                                               p,p'\in P_i \text{ con } x_p >0, x_{p'} =0 
+    \end{align*}
+    indichiamo con $x^{WE}(R)$ una tale soluzione.
+  \end{mydef}  
+\end{frame}
+
+\begin{frame}{Teorema di Beckmann, McGuire and Winsten}
+  \begin{myteo}[Beckmann, McGuire and Winsten]
+    Data $R\in \mathcal{R}$ una soluzione $x$ è un equilibrio di
+    Wardrop se e solo se $x$ è una soluzione del problema
+    \begin{align*}
+        \text{minimizzare} \;&  \sum _{j\in A} \int _0 ^ {x_j}
+        l_j(z)\de z \\
+        \text{con} \;& \sum _{p\in P, p\ni j} x_p = x_j&\forall j\in
+        A\\
+        & \sum _{p\in P_i} x_p = X_i& \forall i\in W\\
+        & x_p \ge 0&\forall p\in P        
+    \end{align*}
+  \end{myteo}
+\end{frame}
+
+
+\begin{frame}{Esistenza e unicità dell'equilibrio di Wardrop}
+  \begin{myteo}
+    Dato $R\in \mathcal{R}$ esiste sempre un equilibrio di Wardrop
+    $x^{WE}(R)$.
+
+    Inoltre se le funzioni $l_j$ sono \textbf{strettamente crescenti}
+    allora l'equilibrio di Wardrop è unico.
+  \end{myteo}
+  \begin{proof}
+    Il problema del teorema di Beckmann, McGuire and Winsten è
+    convesso, quindi esiste sempre una soluzione.
+
+    Se tutte le funzioni $l_i$ sono strettamente crescenti allora la
+    funzione obiettivo è strettamente convessa e quindi la soluzione è
+    unica.
+  \end{proof}
 \end{frame}
 
 \subsection{Il prezzo dell'anarchia (POA)}
