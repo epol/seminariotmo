@@ -538,6 +538,30 @@
   \end{myteo}
 \end{frame}
 
+\begin{frame}{Esempio di Pigou}
+  \begin{center}
+    \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70}]
+      \node[mnode] (1) at (0,0) {s}; 
+      \node[mnode] (2) at (3,0) {t};
+      \draw [->] (1) to [bend left] node[above] {$l_1(x) = x$}
+      node[below] {\small $1$} (2);
+      \draw [->] (1) to [bend right] node[below] {$l_2(x) = 1$}
+      node[above] {\small $0$} (2);
+      \draw [->,color=red] (-4,0) -- node[above] {1 unità di traffico} (1) ;
+      \draw [->,color=red] (2) --  (5,0) ;
+      \node at (7,0) {};
+    \end{tikzpicture}
+  \end{center}
+  \begin{align*}
+    x^{WE}_1 = 1 & & x^{WE}_2 = 0 & \\
+    x^{WE}_{p_1} = 1 & & x^{WE}_{p_2} = 0 & \\
+    \sum_{j\in p_1} l_j\pa{x^{WE}_j} &= 1 & \sum_{j\in p_2} l_j\pa{x^{WE}_j} &= 1
+  \end{align*}
+  \begin{align*}
+    C\pa{x^{SO}} = \frac{3}{4} && C\pa{x^{WE}} = 1
+  \end{align*}
+\end{frame}
+
 \begin{frame}{Teorema di Beckmann, McGuire and Winsten}
   Manteniamo l'ipotesi di avere un'unica coppia origine-destinazione e
   supponiamo che il flusso richiesto sia $1$.
@@ -658,12 +682,217 @@
   \end{proof}
 \end{frame}
 
-\subsection{Il prezzo dell'anarchia (POA)}
+\subsection{Il prezzo dell'anarchia (PoA)}
 
+\begin{frame}{Inefficienza dell'equilibrio}
+  Abbiamo già visto nell'esempio di Pigou che la soluzione
+  dell'equilibrio di Wardrop può avere un costo globale maggiore di
+  quello della soluzione socialmente ottima.
+
+  Siamo interessati a capire quanto può peggiorare il costo, definiamo
+  per ogni rete $R \in \mathcal{R}$ la quantità
+  \[ \frac{C\pa{ x^{SO}}}{C\pa{ x^{WE}}} \]
+  \begin{mydef}[Prezzo dell'anarchia (PoA)]
+    Dato $\mathcal{R}' \subseteq \mathcal{R}$ siamo interessati alla
+    quantità
+    \[ \inf _{R\in \mathcal{R}'} \frac{C\pa{ x^{SO}}}{C\pa{
+          x^{WE}}} \]
+  \end{mydef}
+\end{frame}
+
+\begin{frame}{PoA per funzioni convesse}
+  Abbiamo definito in precedenza $\mathcal{R}^{conv} \subseteq
+  \mathcal{R}$ l'insieme delle istanze in cui le funzioni latenza
+  $l_j$ sono tutte convesse.
+  \begin{myteo}[Roughgarden and Tardos]
+    \[ \inf _{R\in \mathcal{R}^{conv}} \frac{C\pa{ x^{SO}}}{C\pa{
+          x^{WE}}} = 0 \]
+  \end{myteo}
+\end{frame}
+
+\begin{frame}
+  \begin{proof}
+    \begin{center}
+      \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70}]
+        \node[mnode] (1) at (0,0) {s}; 
+        \node[mnode] (2) at (3,0) {t};
+        \draw [->] (1) to [bend left] node[above] {$l_1(x) = x^k$} (2);
+        \draw [->] (1) to [bend right] node[below] {$l_2(x) = 1$} (2);
+        \draw [->,color=red] (-4,0) -- node[above] {1 unità di traffico} (1) ;
+        \draw [->,color=red] (2) --  (5,0) ;
+        \node at (7,0) {};
+      \end{tikzpicture}
+    \end{center}
+    \vspace{-25px}
+    \begin{align*}
+      x^{SO}_1 &= \pa{k+1}^{-1/k} & x^{SO}_2 = 1- \pa{k+1}^{-1/k}
+    \end{align*}
+    \[ C\pa{x^{SO}} = 1 - \frac{k}{k+1}x^{SO}_1 \]
+    \begin{align*}
+      x^{WE}_1 &= 1 & x^{WE}_2 &= 0 & C\pa{x^{WE}} = 1
+    \end{align*}
+    Per $k\to \inf$ si ha che $x^{SO}_1 \to 1$ e $C\pa{x^{SO}}\to 0$.
+  \end{proof}
+\end{frame}
+
+\begin{frame}{PoA per funzioni affini}
+  Abbiamo definito in precedenza $\mathcal{R}^{aff} \subseteq
+  \mathcal{R}$ l'insieme delle istanze in cui le funzioni latenza
+  $l_j$ sono tutte affini.
+  \begin{myteo}[Roughgarden and Tardos]
+    \[ \inf _{R\in \mathcal{R}^{aff}} \frac{C\pa{ x^{SO}}}{C\pa{
+          x^{WE}}} = \frac{3}{4} \]
+  \end{myteo}
+\end{frame}
+
+\subsection{Paradosso di Braess}
+
+\begin{frame}{Esempio}
+  \begin{center}
+    \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70}]
+      \node[mnode] (0) at (0,0) {0}; 
+      \node[mnode] (1) at (3,2) {1};
+      \node[mnode] (2) at (3,-2) {2};
+      \node[mnode] (3) at (7,0) {3};
+      \draw [->] (0) to node[below] {x} (1);
+      \draw [->] (0) to node[above] {1} (2);
+      \draw [->] (1) to node[below] {1} (3);
+      \draw [->] (2) to node[above] {x} (3);
+%      \draw [->] (1) to [bend left] node[above] {$l_1(x) = x^k$} (2);
+%      \draw [->] (1) to [bend right] node[below] {$l_2(x) = 1$} (2);
+      \draw [->,color=red] (-1,0) -- node[above,color=black] {1} (0) ;
+      \draw [->,color=red] (0) to [bend left] node[below,color=blue]{$1/2$} (1);
+      \draw [->,color=red] (0) to [bend right] node[above,color=blue]{$1/2$} (2);
+      \draw [->,color=red] (1) to [bend left] node[below,color=blue]{$1/2$} (3);
+      \draw [->,color=red] (2) to [bend right] node[above,color=blue]{$1/2$} (3);
+      \draw [->,color=red] (3) -- (8,0) ;
+      \onslide<2-> {
+        \draw [->] (1) to node[left] {0} (2);
+      }
+      \onslide<3-> {
+        \draw [->,color=red,line width=1.5pt] (1) to [bend left] node[right,color=red]
+        {1} (2);
+        \draw [->,color=red,line width=1.5pt] (0) to [bend left] node[above]{$1$} (1);
+        \draw [->,color=red,line width=1.5pt] (2) to [bend right] node[below]{$1$} (3);
+        \draw [->,color=red,line width=1.5pt] (-1,0) -- (0) ;
+        \draw [->,color=red,line width=1.5pt] (3) -- (8,0) ;
+      }
+    \end{tikzpicture}
+  \end{center}
+  \begin{tabular}{r|cc}
+    & $C\pa{x^{SO}}$ & $C\pa{x^{WE}}$ \\
+    \hline
+    \onslide<2->{Senza 1-2} & $\sfrac{3}{2}$ & $\sfrac{3}{2}$ \\
+    \onslide<3->{Con 1-2 & $\sfrac{3}{2}$ & $1$}
+  \end{tabular}
+\end{frame}
+
+\begin{frame}{Sottoreti}
+  \begin{mydef}[Sottorete]
+    Data un'istanza $R=(V,A,P,s,t,X,l)$ diciamo che
+    $R_0=(V_0,A_0,P_0,s_0,t_0)$ è una \textbf{sottorete} di $R$ se:
+    \begin{itemize}
+    \item $V_0 \subseteq V$ e $A_0 = A \cap \pa{V_0\times V_0}$,
+    \item tutti i percorsi di $P$ passanti per $\pa{V_0,A_0}$
+      contengono un percorso in $P_0$ da $s_0$ in $t_0$ sugl'archi di
+      $A_0$.
+    \end{itemize}
+    Scriviamo $R_0\subseteq R$.
+  \end{mydef}
+\end{frame}
+
+\begin{frame}{Paradosso di Braess}
+  \begin{mydef}[Paradosso di Braess]
+    Data una rete $R=(V,A,P,s,t,X,l)$ e una sua sottorete
+    $R_0=(V_0,A_0,P_0,s_0,t_0)$ diciamo che esiste un
+    \textbf{paradosso di Braess} in $R$ centrato in $R_0$ se esiste
+    un'altra istanza nella forma $R_m=(V,A,P,s,t,X,m)$ tale che:
+    \begin{itemize}
+    \item $\forall j\in A$ e $\forall x_j \ge0$
+      \begin{itemize}
+      \item $j \in A_0 \longrightarrow m_j(x_j) \le l_j(x_j)$,
+      \item $j \not\in A_0\longrightarrow m_j(x_j) = l_j(x_j)$;
+      \end{itemize}
+    \item $C\pa{x^{WE}\pa{R_m}} > C\pa{x^{WE}\pa{R}}$.
+    \end{itemize}
+  \end{mydef}
+\end{frame}
 
 \section{Instradamento parzialmente ottimo}
 
 \subsection{Provider e sottoreti}
+
+\begin{frame}{Provider}
+  Dato un servizio (ad esempio la rete internet) potrebbero esiste più
+  fornitori (provider) che scambiano tra loro il traffico, ogni
+  fornitore prenderà decisioni all'interno della propria
+  \textbf{sottorete}.
+
+  Data una rete $R$ la presenza di $k$ provider è data dalle loro
+  sottoreti $R_1,...,R_k$ \textbf{disgiunte} (cioè tali che $V_i\cap
+  V_j = \emptyset$). \vfill
+
+  Ci concentriamo nel caso in cui ci sia un unico provider con una
+  sottorete $R_0$ mentre il resto della rete è indipendente.
+
+  Sia $R=(V,A,P,s,t,X,l)$ una rete e $R_0=(V_0,A_0,P_0,s_0,t_0)
+  \subseteq R$. Ricordiamo che tutti i percorsi in $P$ passanti per
+  $R_0$ entrano in $s_0$ ed escono in $t_0$.
+  \vfill
+\end{frame}
+
+\begin{frame}{Instradamento dentro un provider}
+  \begin{mydef}[Latenza effettiva]
+    Dato $X_0\in\mathbb{R}$ definiamo $L\pa{X_0}$ il costo globale di
+    una soluzione \textbf{socialmente ottima} di $R_0$ con $X_0$ unità
+    di traffico, definiamo quindi la \textbf{latenza effettiva} di
+    $R_0$ come
+    \[ l_0(X_0) = \frac{L\pa{X_0}}{X_0} \]
+  \end{mydef}
+  In questo modo il provider garantisce un instradamento ottimo dentro
+  la rete di sua competenza.
+
+  \begin{mylem}
+    La funzione $l_0$ è continua, non negativa e non
+    decrescente. Inoltre se tutte le $l_i$ degli archi interni a $R_0$
+    sono convesse allora $l_0$ è convessa.
+  \end{mylem}
+\end{frame}
+
+\begin{frame}{Instradamento globale}
+  Data una rete $R$ è una sua sottorete $R_0$ calcoliamo la latenza
+  effettiva di $R_0$, definiamo quindi $R'=(V',A',P',s,t,X,l')$ con
+  \begin{itemize}
+  \item $V' = \pa{V\setminus V_0}\cup \set{s_0,t_0}$,
+  \item $A' = \pa{A\setminus A_0}\cup \set{\pa{s_0,t_0}}$,
+  \item $P'$ i percorsi di $P$ con $\pa{s_0,t_0}$ al posto dei
+    percorsi in $P_0$,
+  \item Per $j\in A\setminus A_0$ definiamo $l'_j = l_j$
+  \item $l'_{\pa{s_0,t_0}} = l_0$.
+  \end{itemize}
+
+  \begin{mydef}[Instradamento parzialmente ottimo]
+    Diciamo che $x$ soluzione di $R$ è un \textbf{instradamento
+      parzialmente ottimo} se su $A\setminus A_0$ coincide con
+    $x^{WE}(R')$, indichiamo tale soluzione con
+    \[ x^{POR}(R,R_0) \]
+  \end{mydef}
+\end{frame}
+
+\begin{frame}{Osservazioni}
+  \begin{itemize}
+  \item In $x^{POR}$ non è ben definito il flusso sugl'archi di $R_0$,
+    infatti la soluzione di $x^{SO}(R_0)$ potrebbe non essere unica;
+  \item le soluzioni $x^{SO}$ e $x^{WE}$ possono essere viste come
+    instramenti parzialmente ottimi (rispettivamente con $R_0=R$ e
+    $R_0=\emptyset$);
+  \item la definizione di instradamento parzialmente ottimo può essere
+    estesa a più provider disgiunti sostituendo ognuno con la propria
+    latenza effettiva;
+  \item questo modello non è facilmente estendibile al caso di
+    provider con multipli punti di accesso e/o uscita.
+  \end{itemize}
+\end{frame}
 
 \subsection{Efficienza e limiti}
 
