@@ -736,11 +736,16 @@
 \end{frame}
 
 \begin{frame}{PoA per funzioni affini}
-  Abbiamo definito in precedenza $\mathcal{R}^{aff} \subseteq
-  \mathcal{R}$ l'insieme delle istanze in cui le funzioni latenza
-  $l_j$ sono tutte affini.
+  Abbiamo definito in precedenza
+  $\mathcal{R}^{aff} \subseteq \mathcal{R}$ e $\mathcal{R}^{conc}
+  \subseteq \mathcal{R}$  gli insiemi delle istanze in
+  cui le funzioni latenza $l_j$ sono tutte rispettivamente affini e concave.
   \begin{myteo}[Roughgarden and Tardos]
     \[ \inf _{R\in \mathcal{R}^{aff}} \frac{C\pa{ x^{SO}}}{C\pa{
+          x^{WE}}} = \frac{3}{4} \]
+  \end{myteo}
+  \begin{myteo}
+    \[ \inf _{R\in \mathcal{R}^{conc}} \frac{C\pa{ x^{SO}}}{C\pa{
           x^{WE}}} = \frac{3}{4} \]
   \end{myteo}
 \end{frame}
@@ -851,11 +856,16 @@
   \end{mydef}
   In questo modo il provider garantisce un instradamento ottimo dentro
   la rete di sua competenza.
-
+\end{frame}
+\begin{frame}{Proprietà della latenza effettiva}
   \begin{mylem}
-    La funzione $l_0$ è continua, non negativa e non
-    decrescente. Inoltre se tutte le $l_i$ degli archi interni a $R_0$
-    sono convesse allora $l_0$ è convessa.
+    La funzione $l_0$ è continua, non negativa e non decrescente.
+  \end{mylem}
+  \begin{mylem}
+    Se $R\in \mathcal{R}^{conv}$ allora $L_0$ è convessa.
+  \end{mylem}
+  \begin{mylem}
+    Sia $R\in \mathcal{R}^{aff}$ allora $l_0$ è concava.
   \end{mylem}
 \end{frame}
 
@@ -883,9 +893,13 @@
   \begin{itemize}
   \item In $x^{POR}$ non è ben definito il flusso sugl'archi di $R_0$,
     infatti la soluzione di $x^{SO}(R_0)$ potrebbe non essere unica;
-  \item le soluzioni $x^{SO}$ e $x^{WE}$ possono essere viste come
-    instramenti parzialmente ottimi (rispettivamente con $R_0=R$ e
-    $R_0=\emptyset$);
+  % \item le soluzioni $x^{SO}$ e $x^{WE}$ possono essere viste come
+  %   instramenti parzialmente ottimi (rispettivamente con $R_0=R$ e
+  %   $R_0=\emptyset$);
+  \item il conecetto di latenza effettiva può essere utilizzato anche
+    quando il provider instrada il traffico secondo un equilibrio di
+    Wardrop locale, in questo caso l'instradamento globale sarà un
+    equilibrio di Wardrop;
   \item la definizione di instradamento parzialmente ottimo può essere
     estesa a più provider disgiunti sostituendo ognuno con la propria
     latenza effettiva;
@@ -896,6 +910,126 @@
 
 \subsection{Efficienza e limiti}
 
+\begin{frame}{Esempio}
+  \begin{center}
+    \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70}]
+      \node[mnode] (0) at (0,0) {0}; 
+      \node[mnode] (1) at (4,2) {1};
+      \node[mnode] (2) at (4,-2) {2};
+      \node[mnode] (3) at (8,0) {3};
+      \draw [->] (0) to node[above] {$x$} (1);
+      \draw [->] (0) to node[below] {$1.25$} (2);
+      \draw [->] (1) to node[above] {$3.25$} (3);
+      \draw [->] (2) to node[below] {$3x$} (3);
+      \draw [->,blue] (1) to [bend right] node[left] {$l_5(x) = 0.31$} (2);
+      \draw [->,blue] (1) to [bend left] node[right] {$l_6(x) = 0.4x$} (2);
+%      \draw [->] (1) to [bend left] node[above] {$l_1(x) = x^k$} (2);
+%      \draw [->] (1) to [bend right] node[below] {$l_2(x) = 1$} (2);
+      \draw [->,color=red] (-1,0) -- node[above,color=black] {$1$} (0) ;
+      % \draw [->,color=red] (0) to [bend left] node[below,color=blue]{$1/2$} (1);
+      % \draw [->,color=red] (0) to [bend right] node[above,color=blue]{$1/2$} (2);
+      % \draw [->,color=red] (1) to [bend left] node[below,color=blue]{$1/2$} (3);
+      % \draw [->,color=red] (2) to [bend right] node[above,color=blue]{$1/2$} (3);
+      \draw [->,color=red] (3) -- (9,0) ;
+      \only<2> {
+        \draw [dashed,->] (1) to node {$\tilde l_0(X_0)$}(2) ;
+      }
+      \onslide<3-> {
+        \draw [dashed,->] (1) to node {$l_0(X_0)$}(2) ;
+      }
+    \end{tikzpicture}
+  \end{center}
+  \only<2>{
+    Se il traffico viene instradato secondo un equilibrio di Wardrop
+    abbiamo:
+    \[ \tilde l_0(X_0) = \min\pa{0.31,0.4X_0} \]
+    con un costo globale $C\pa{x^{WE}(R)} = 4.19$.
+  }
+  \only<3>{
+    Se il traffico viene ottimizzato dentro il provider abbiamo:
+    \[ l_0(X_0) = \left\{ 
+        \begin{matrix}
+          0.4X_0 & \text{se }0\le X_0\le 0.3875 \\
+          0.31 - \frac{0.0961}{1.6X_0} & \text{se } X_0 \ge 0.8375
+        \end{matrix}
+        \right.
+      \]
+    con un costo globale $C\pa{x^{POR}(R,R_0)} = 4.25$.
+  }
+  \only<4>
+  {
+    Confrontando i due metodi otteniamo:
+    \begin{center}
+      \begin{tabular}{r|cc}
+        & WE & POR \\
+        \hline
+        Costo globale & 4.19 & 4.25
+      \end{tabular}
+    \end{center}
+  }
+\end{frame}
+
+\begin{frame}{POR paradox}
+  \begin{mydef}[POR paradox]
+    Data un'istanza $R$ e una sua sottorete $R_0 \subseteq R$ diciamo
+    che abbiamo un \textbf{partially optimal routing paradox} in $R$
+    centrato in $R_0$ se 
+    \[ C\pa{ x^{POR} (R,R_0)} > C\pa{ x^{WE} (R)} \]
+  \end{mydef}
+  
+  Nell'esempio precedente abbiamo visto un caso in cui la soluzione
+  parzialmente ottima peggiora il costo globale, quindi un caso di
+  paradosso POR.
+\end{frame}
+
+
+\begin{frame}{Paradosso POR e paradosso di Braess}
+  \begin{myteo}[Paradosso POR come paradosso di Braess\footnote{D.
+      Acemoglu, R. Johari e A. Ozdaglar, Partially Optimal Routing,
+      IEEE Journal on Selected Areas in Communications, vol. 25,
+      No. 6, August 2007, Proposizione 1}]
+    Se una rete $R$ ha un \textbf{paradosso POR} centrato in
+    $R_0\subseteq R$ allora esiste un \textbf{paradosso di Braess} in
+    $R$ centrato in $R_0$.
+  \end{myteo}
+  \begin{mycor}
+    Data un'istanza $R$, se non ci sono paradossi di Braess in $R$
+    allora la soluzione POR rispetto a qualsiasi sottorete \textbf{non
+    peggiora} il costo globale.
+  \end{mycor}
+\end{frame}
+
+\begin{frame}
+  \begin{mypro}
+    \begin{enumerate}
+    \item $\forall \mathcal{R}' \in \set{\mathcal{R}^{conv},
+        \mathcal{R}^{aff}, \mathcal{R}^{conc}}$ si ha
+        \[ \inf _{\tiny\begin{matrix}R\in \mathcal{R}'\\R_0\subseteq
+              R\end{matrix}}
+          \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \le
+          \inf _{R\in \mathcal{R}'}
+          \frac{C\pa{x^{SO}(R)}}{C\pa{x^{WE}(R)}}
+        \]
+      \item
+        \[ \inf _{\tiny\begin{matrix}R\in \mathcal{R}\\R_0\subseteq
+              R\end{matrix}}
+          \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} =
+          \inf _{R\in \mathcal{R}}
+          \frac{C\pa{x^{SO}(R)}}{C\pa{x^{WE}(R)}}
+        \]
+      \item
+        \[ \inf _{\tiny\begin{matrix}R\in \mathcal{R}^{aff}\\R_0\subseteq
+              R\end{matrix}}
+          \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \ge
+          \inf _{R\in \mathcal{R}^{conc}}
+          \frac{C\pa{x^{SO}(R)}}{C\pa{x^{WE}(R)}}
+        \]
+    \end{enumerate}
+  \end{mypro}
+\end{frame}
+
+\begin{frame}
+\end{frame}
 
 \section{Concorrenza sui costi}
 
