@@ -735,7 +735,7 @@
   \end{proof}
 \end{frame}
 
-\begin{frame}{PoA per funzioni affini}
+\begin{frame}{PoA per funzioni affini e concave}
   Abbiamo definito in precedenza
   $\mathcal{R}^{aff} \subseteq \mathcal{R}$ e $\mathcal{R}^{conc}
   \subseteq \mathcal{R}$  gli insiemi delle istanze in
@@ -744,7 +744,11 @@
     \[ \inf _{R\in \mathcal{R}^{aff}} \frac{C\pa{ x^{SO}}}{C\pa{
           x^{WE}}} = \frac{3}{4} \]
   \end{myteo}
-  \begin{myteo}
+  % \begin{myteo}[\footnote{D. Acemoglu, R. Johari e A. Ozdaglar, Partially Optimal Routing,
+  %     IEEE Journal on Selected Areas in Communications, vol. 25,
+  %     No. 6, August 2007, Lemma 2}]
+  \begin{myteo}[\footnote{I. Menache e A. Ozdaglar, Network Games,
+      Morgan \& Claypool Publishers, 2010, Lemma 3.10}]
     \[ \inf _{R\in \mathcal{R}^{conc}} \frac{C\pa{ x^{SO}}}{C\pa{
           x^{WE}}} = \frac{3}{4} \]
   \end{myteo}
@@ -999,11 +1003,23 @@
   \end{mycor}
 \end{frame}
 
+\begin{frame}{Efficienza del POR}
+  Analogamente a come abbiamo fatto con l'equilibrio di Wardrop,
+  siamo interessati a dare dei limiti alla quantità
+  \[ \inf _{\tiny\begin{matrix}R\in \mathcal{R}'\\R_0\subseteq
+        R\end{matrix}}
+    \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \]
+  per opportuni sottoinsiemi di reti $\mathcal{R}' \subseteq
+  \mathcal{R}$.
+  
+\end{frame}
+
 \begin{frame}
   \begin{mypro}
     \begin{enumerate}
-    \item $\forall \mathcal{R}' \in \set{\mathcal{R}^{conv},
-        \mathcal{R}^{aff}, \mathcal{R}^{conc}}$ si ha
+    % \item $\forall \mathcal{R}' \in \set{\mathcal{R}^{conv},
+    %     \mathcal{R}^{aff}, \mathcal{R}^{conc}}$ si ha
+    \item $\forall \mathcal{R}' \subseteq \mathcal{R}$ si ha
         \[ \inf _{\tiny\begin{matrix}R\in \mathcal{R}'\\R_0\subseteq
               R\end{matrix}}
           \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \le
@@ -1028,7 +1044,70 @@
   \end{mypro}
 \end{frame}
 
+\begin{frame}{Efficienza per problemi lineari e convessi}
+  \begin{myteo}
+  \[ \inf _{\tiny\begin{matrix}R\in \mathcal{R}^{conv}\\R_0\subseteq
+        R\end{matrix}}
+    \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} = 0\]    
+  \[ \inf _{\tiny\begin{matrix}R\in \mathcal{R}^{aff}\\R_0\subseteq
+        R\end{matrix}}
+    \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} = \frac{3}{4} \]    
+  \end{myteo}
+\end{frame}
+
 \begin{frame}
+  \begin{proof}[Dimostrazione (primo punto)]
+    Dal teorema di Roughgarden and Tardos sappiamo che 
+    \[ \inf _{R\in \mathcal{R}^{conv}} \frac{C\pa{ x^{SO}(R)}}{C\pa{
+          x^{WE}(R)}} = 0 \]
+    mentre dal primo punto della propozione precendente abbiamo
+    \[ \inf _{\tiny\begin{matrix}R\in \mathcal{R}^{conv}\\R_0\subseteq
+          R\end{matrix}}
+      \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \le
+      \inf _{R\in \mathcal{R}^{conv}}
+      \frac{C\pa{x^{SO}(R)}}{C\pa{x^{WE}(R)}}
+    \]
+    da cui la tesi
+    \[ \inf _{\tiny\begin{matrix}R\in \mathcal{R}^{conv}\\R_0\subseteq
+        R\end{matrix}}
+    \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} = 0\]    
+  \end{proof}
+\end{frame}
+
+\begin{frame}
+  \begin{proof}[Dimostrazione (secondo punto)]
+    Dalla teorema sull'efficienza dell'equilibrio di Wardrop per
+    funzioni concave sappiamo che
+    \[ \inf _{R\in \mathcal{R}^{conc}} \frac{C\pa{ x^{SO}(R)}}{C\pa{
+          x^{WE}(R)}} = \frac{3}{4} \]
+    mentre il terzo punto della proposizione ci dice che
+    \[ \inf _{\tiny\begin{matrix}R\in \mathcal{R}^{aff}\\R_0\subseteq
+          R\end{matrix}}
+      \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \ge
+      \inf _{R\in \mathcal{R}^{conc}}
+      \frac{C\pa{x^{SO}(R)}}{C\pa{x^{WE}(R)}}
+    \]
+    quindi
+    \[ \inf _{\tiny\begin{matrix}R\in \mathcal{R}^{aff}\\R_0\subseteq
+          R\end{matrix}}
+      \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \ge \frac{3}{4} \]    
+    applicando il primo punto della proposizone con $\mathcal{R}' =
+    \mathcal{R}^{aff}$ e utilizzando il teorema di Roughgarden and
+    Tardos per funzioni affini abbiamo la tesi.
+  \end{proof}
+\end{frame}
+
+\begin{frame}{Estensioni\footnote{D. Acemoglu, R. Johari e
+      A. Ozdaglar, Partially Optimal Routing, IEEE Journal on Selected
+      Areas in Communications, vol. 25, No. 6, August 2007,
+      Proposizione 1}}
+  \begin{itemize}
+  \item Si possono dare dei limiti inferiori all'efficienza per reti
+    le cui funzioni latenza sono polinomi di grado limitato;
+  \item quando si considerano reti i cui provider possono avere più
+    punti di ingresso o uscita l'efficienza può essere piccola a
+    piacere anche limitandosi a funzioni latenza lineari.
+  \end{itemize}
 \end{frame}
 
 \section{Concorrenza sui costi}
