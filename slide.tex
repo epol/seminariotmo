@@ -1114,10 +1114,187 @@
 
 \subsection{Modello}
 
+\begin{frame}{Motivazioni}
+  Vogliamo aggiungere al nostro modello un costo economico che il
+  provider fa pagare all'utente per ogni unità di traffico inviata
+  sulla sua rete.
+
+  I provider sceglieranno i costi in modo da massimizzare il loro
+  profitto mentre gli utenti sceglieranno quale link utilizzare per
+  minimizzare la latenza ed il costo della trasmissione.
+
+  Bisognerà anche prevedere un limite superiore (\textit{reservation
+    utilty}) al costo (sia in termini di latenza che in termini di
+  spesa) che l'utente è disposto a sostenere.
+\end{frame}
+
+\begin{frame}{Modello}
+  Supponiamo che la nostra rete sia costituita da $I$ archi
+  $\mathcal{I} = \set{1,...,I}$ in parallelo ognuno con una funzione
+  latenza $l_i$ convessa, non decrescente, differenziabile e nulla in
+  $0$.
+
+  Dato un vettore dei costi $\bra{p_1,...,p_I}$ il costo pagato per
+  attraversare l'arco $i$ con un traffico $x_i$ sarà:
+  \[ x_i \pa{ l_i(x_i) + p_i} \]
+
+  \begin{center}
+    \begin{tikzpicture}[mnode/.style={circle,fill=blue!20},>=latex,snode/.style={circle,fill=red!70}]
+      \node[mnode] (s) at (0,0) {s};
+      \node[mnode] (t) at (5,0) {t};
+      \draw [->,color=blue] (s) to [bend left=40] node[above] {\small $l_1(x_1)$, $p_1$} (t);
+      \draw [->,color=green] (s) to [bend left=20] node[above] {\small $l_2(x_2)$, $p_2$} (t);
+      \draw [->,color=black] (s) to node[above] {\small $l_3(x_3)$, $p_3$} (t);
+      \draw [->,color=black] (s) to [bend right=20] node[above] {\small $l_4(x_4)$, $p_4$} (t);
+      \draw [->,color=magenta] (s) to [bend right=40] node[above] {\small $l_5(x_5)$, $p_5$} (t);
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Soluzione}
+  Dato il nostro insieme di link $\mathcal{I}$, le loro funzioni
+  latenza $\bra{l_i}_i\in\mathcal{I}$ e il vettore dei prezzi
+  $\bra{p_i}_{i\in\mathcal{I}}$ scelti dai provider diciamo che un
+  vettore $x\in \mathbb{R}_+^\mathcal{I}$ è \textbf{soluzione del
+    problema} se:
+  \begin{align*}
+    l_i(x_i) + p_i &\le R \\
+    \sum _{i\in \mathcal{I}} x_i &\le d 
+  \end{align*}
+  Dove $R$ è la \textit{reservation utility} (il massimo costo totale
+  che gli utenti sono disposti a pagare) e $d$ è la quantità di
+  traffico che si vuole far passare.
+\end{frame}
+
+\begin{frame}{Comportamento degli utenti}
+  \begin{mydef}
+    Una soluzione $x\in \mathbb{R}_+^\mathcal{I}$ è un
+    \textbf{equilibrio di Wardrop} se:
+    \begin{align*}
+      l_i(x_i) + p_i &= \min _j \set{l_j(x_j)+p_j} & \forall i\text{ con } x_i>0 \\
+      l_i(x_i) + p_i &\le R \\
+      \sum _{i\in \mathcal{I}} x_i &\le d \\
+      \sum _{i\in \mathcal{I}} x_i &= d & \text { se } \min _j
+                                          \set{l_j(x_j)+p_j} <R
+    \end{align*}
+    indichiamo una tale soluzione con $x^{WE}$.
+  \end{mydef}
+  Chiamiamo $W(p)$ l'insieme degli equilibri di Wardrop con vettore
+  dei prezzi $p$.
+\end{frame}
+
+\begin{frame}{Social surplus}
+  \begin{mydef}[Social surplus]
+    Data una soluzione $x$ chiamiamo \textit{social surplus} la
+    quantità:
+    \[ \mathbb{S}(x) = \sum _{i\in\mathcal{I}}\pa{ R -
+        l_i\pa{x_i}}x_i \]
+  \end{mydef}
+  Questa funzione rappresenta la differenza tra quanto gli utenti sono
+  disposti a spendere e quanto spendono in \textbf{latenza}.
+  \vfill
+  
+  Per $R$ sufficientemente grande (quando tutto il traffico viene
+  instradato) si ha:
+  \[ \mathbb{S}(x) = Rd - C(x) \]
+\end{frame}
+
+\begin{frame}{Ottimo sociale}
+  \begin{mydef}[Soluzione socialmente ottima]
+    Diciamo che una soluzione è un \textbf{ottimo sociale} se risolve il
+    problema:
+    \begin{align*}
+      \text{massimizzare }\;\; & \mathbb{S}(x) = \sum
+                            _{i\in\mathcal{I}}\pa{ R - l_i\pa{x_i}}x_i
+      \\
+      \text{tale che }\;\; & x\ge 0\\
+      & \sum _{i\in \mathcal{I}} x_i \le d
+    \end{align*}
+    indichiamo una tale soluzione con $x^S$.
+  \end{mydef}
+\end{frame}
+
 \subsection{Monopoli e oligopoli}
 
+\begin{frame}{Equilibrio in presenza di un monopolio}
+  Supponiamo che tutti i link $\mathcal{I}$ siano gestiti da un
+  monopolista che vuole massimizzare il suo profitto
+  \[ \Pi (p,x) = \sum _{i\in\mathcal{I}} p_i x_i \]
 
+  Dati i parametri $R$ e $d$ il monopolista deciderà il vettore dei
+  prezzi.
+  \begin{mydef}[Equilibrio di monopolio]
+    I vettori $\pa{p^{ME},x^{ME}}\ge 0$ sono un \textbf{equilibrio di
+      monopolio} se $x^{ME}\in W(p^{ME})$ e 
+    \begin{align*}
+      \forall p\ge 0,\; \forall x\in W(p) && \Pi \pa{p^{ME},x^{ME}}
+                                             \ge \Pi \pa{p,x}
+    \end{align*}
+  \end{mydef}
+\end{frame}
 
+\begin{frame}{Efficienza dell'equilibrio di monopolio}
+  \begin{myteo}[Ottimalità dell'equilibrio di
+    monopolio\footnote{D. Acemoglu, A. Ozdaglar, Competition and
+      Efficiency in Congested Markets, Mathematics of Operations
+      Research, Vol. 32, No. 1, February 2007, pp. 1–31, Proposition 3.2}]
+    Un vettore $x\in \mathbb{R}_+^\mathcal{I}$ è un \textbf{equilibrio
+      di monopolio} se e solo se è un \textbf{ottimo sociale}.
+  \end{myteo}
+
+  Ricordando la definizione di \textit{social surplus}
+  \[ \mathbb{S}(x) = \sum _{i\in\mathcal{I}}\pa{ R -
+      l_i\pa{x_i}}x_i \]
+  e osserviamo che il prezzo massimo che il monopolista può far pagare
+  sul link $i$ è:
+  \[ R - l_i(x_i) \]
+\end{frame}
+
+\begin{frame}{Presenza di più provider}
+  Supponiamo ora ci siano $S$ provider e che ognuno di questi
+  controlli il prezzo di un certo sottoinsieme di link $\mathcal{I}_s$
+  (per $s\in S$).
+
+  Dato un provider $s\in S$ definiamo:
+  \begin{itemize}
+  \item $p_s = \bra{p_i}_{i\in \mathcal{I}_s}$
+  \item $p_{-s} = \bra{p_i}_{i\not\in \mathcal{I}_s}$
+   \item $\displaystyle \Pi _s \pa{p_s, p_{-s},x} = \sum _{i\in
+       \mathcal{I}_s} p_i x_i\;$ con $x\in W\pa{p_s, p_{-s}}$
+  \end{itemize}
+  
+  Ogni provider cercherà di massimizzare il proprio profitto, siamo
+  quindi in una situazione in cui vogliamo cercare un
+  \textbf{equilibrio di Nash}.
+\end{frame}
+
+\begin{frame}{Equilibrio di oligopolio}
+  \begin{mydef}[Equilibrio di oligopolio]
+    Diciamo che i vettori $\pa{p^{OE},x^{OE}}\ge 0$ sono un
+    \textbf{equilibrio di oligopolio} se $x^{OE}\in W\pa{p^{OE}}$ e
+    $\forall s\in S$ si ha:
+    \begin{align*}
+      & \forall p_s \ge 0\;\;\; \forall x\in W\pa{p_s,p^{OE}_{-s}} \\
+      & \Pi_s \pa{p^{OE}_s, p^{OE}_{-s},x^{OE}} \ge \Pi _s \pa{p_s, p^{OE}_{-s},x}
+    \end{align*}
+  \end{mydef}
+\end{frame}
+
+\begin{frame}{Efficienza dell'equilibrio di oligopolio}
+  \begin{myteo}[Efficienza dell'equilibrio di
+    oligopolio\footnote{I. Menache e A. Ozdaglar, Network Games,
+      Morgan \& Claypool Publishers, 2010, Teorema 3.14}]
+    Data una rete composta da $I$ link paralleli gestiti da $S$
+    provider, dette $x^{S}$ una soluzione socialmente ottima e
+    $\pa{p^{OE},x^{OE}}$ un equilibrio di oligopolio, si ha:
+    \[ \frac{\mathbb{S}\pa{x^{OE}}} {\mathbb{S}\pa{x^S}} \ge
+      \frac{5}{6} \]
+  \end{myteo}
+\end{frame}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
 
 
 
