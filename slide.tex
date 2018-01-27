@@ -219,7 +219,10 @@
   \end{itemize}
   
   Il costo (globale) della soluzione sarà dato da:
-  \[ C(x) = \sum_{j\in A} l_j(x_j)x_j \]
+  \begin{align*}
+  C(x) = \sum_{j\in A} l_j(x_j)x_j
+    = \sum _{p\in P} \pa{ \sum _{j\in p} l_j(x_j)} x_p
+  \end{align*}
 \end{frame}
 
 \subsection{Instradamento socialmente ottimo}
@@ -270,7 +273,7 @@
 \subsection{Teoria dei giochi}
 
 \begin{frame}{Definizione}
-  \begin{mydef}[Gioco strategico]
+  \begin{mydef}[Gioco]% strategico]
     Un gioco è dato da $\pa{\mathcal{I},\pa{S_i}_{i\in\mathcal{I}},
       \pa{u_i}_{i\in\mathcal{I}}}$ con:
     \begin{itemize}
@@ -289,7 +292,7 @@
   \item $S = \prod _{i\in\mathcal{I}} S_i$,
   \item se $s = \bra{s_i}_{i\in\mathcal{I}} \in S$ allora $s_{-i} =
     \bra{s_j}_{j\neq i}$
-  \item $\displaystyle S_{-i} = \prod _{j\in\mathcal{I},j\neq i} S_i$,
+  \item $\displaystyle S_{-i} = \prod _{j\in\mathcal{I},j\neq i} S_j$,
   \end{itemize}
 \end{frame}
 
@@ -665,13 +668,13 @@
 
 
 \begin{frame}{Esistenza e unicità dell'equilibrio di Wardrop}
-  \begin{myteo}
+  \begin{mycor}
     Dato $R\in \mathcal{R}$ esiste sempre un equilibrio di Wardrop
     $x^{WE}(R)$.
 
     Inoltre se le funzioni $l_j$ sono \textbf{strettamente crescenti}
     allora l'equilibrio di Wardrop è unico.
-  \end{myteo}
+  \end{mycor}
   \begin{proof}
     Il problema del teorema di Beckmann, McGuire and Winsten è
     convesso, quindi esiste sempre una soluzione.
