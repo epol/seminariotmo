@@ -114,21 +114,21 @@
 \begin{frame}{Esempi}
   Reti:
   \begin{itemize}
-  \item Reti stradali,
+  \item reti stradali,
 %  \item reti di distribuzione di risorse (e.g. gas),
   \item reti di telecomunicazione (internet).
   \end{itemize}
 
   Costi:
   \begin{itemize}
-  \item Tempo di percorrenza (latenza),
+  \item tempo di percorrenza (latenza),
   \item perdita di pacchetti,
   \item (costo economico).
   \end{itemize}
 
   Tipi di comportamento:
   \begin{itemize}
-  \item Socialmente ottimo,
+  \item socialmente ottimo,
   \item anarchico (equilibrio di Wardrop),
   \item parzialmente ottimo.
   \end{itemize}
@@ -242,6 +242,12 @@
       &\sum_{p\in P_i} x_p = X_i & i\in W
     \end{matrix}
   \]
+  % \begin{align*}
+  %     \text{minimizzare} & \sum _{j\in A} x_j l_j(x_j) \\
+  %     \text{tale che} &   x_p \ge 0 & p\in P \\
+  %     & x_j = \sum_{p\in P,p\ni j} x_p & j\in A \\
+  %     &\sum_{p\in P_i} x_p = X_i & i\in W
+  % \end{align*}
   \begin{myoss}
     I vincoli sono tutti lineari.
   \end{myoss}
@@ -430,16 +436,17 @@
 \subsection{Equilibrio di Wardrop}
 
 \begin{frame}{Reti e utenti}
-  Rivediamo l'esempio di Pigou dopo averlo ``discretizzato'' a due giocatori:
+  Rivediamo l'esempio di Pigou dopo averlo ``discretizzato'' a due
+  giocatori (ognuno con peso $0.5$):
   \begin{center}
     \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70}]
       \node[mnode] (1) at (0,0) {s}; 
       \node[mnode] (2) at (3,0) {t};
-      \draw [->] (1) to [bend left] node[above] {$l_1(x) = x/4$}
-      node[below] {\small \textcolor{green}{$1$} \textcolor{blue}{$2$}} (2);
-      \draw [->] (1) to [bend right] node[below] {$l_2(x) = 1/2$}
-      node[above] {\small \textcolor{green}{$1$} \textcolor{blue}{$0$}}(2);
-      \draw [->,color=red] (-4,0) -- node[above] {$2$ unità di traffico} (1) ;
+      \draw [->] (1) to [bend left] node[above] {$l_1(x) = x$}
+      node[below] {\small \textcolor{green}{$0.5$} \textcolor{blue}{$1$}} (2);
+      \draw [->] (1) to [bend right] node[below] {$l_2(x) = 1$}
+      node[above] {\small \textcolor{green}{$0.5$} \textcolor{blue}{$0$}}(2);
+      \draw [->,color=red] (-4,0) -- node[above] {$2$ giocatori da $0.5$} (1) ;
       \draw [->,color=red] (2) --  (5,0) ;
       \node at (7,0) {};
     \end{tikzpicture}
@@ -450,9 +457,9 @@
       \begin{tabular}{rcc}
         & Link $1$ & Link $2$ \\
         \cline{2-3}
-        Link $1$ & \multicolumn{1}{|c|}{$0.5,0.5$} & \multicolumn{1}{|c|}{$0.25,0.5$}  \\
+        Link $1$ & \multicolumn{1}{|c|}{$1,1$} & \multicolumn{1}{|c|}{$0.5,1$}  \\
         \cline{2-3}
-        Link $2$ & \multicolumn{1}{|c|}{$0.5,0.25$} & \multicolumn{1}{|c|}{$0.5,0.5$}  \\
+        Link $2$ & \multicolumn{1}{|c|}{$1,0.5$} & \multicolumn{1}{|c|}{$1,1$}  \\
         \cline{2-3}
       \end{tabular}
       \vspace{3px}
@@ -492,20 +499,23 @@
   
   Ricordiamo che $p^* \in P^{\mathcal{I}}$ è un equilibrio di Nash se
   \[ \forall i\in \mathcal{I}\;\; \forall p_i \in P \;\;\;
-    u_i\pa{p^*_i,p^*_{-i}} \le u_i\pa{p_i,p^*_{-i}} \]
-  dove $u_i\pa{p} = \sum _{j\in p_i} m\cdot l(x_j)$ è il costo pagato
-  dall'utente $i$ per percorrere il percorso $p_i$.
+    u_i\pa{p^*_i,p^*_{-i}} \le u_i\pa{p_i,p^*_{-i}} \] dove
+  $u_i\pa{p} = \sum _{j\in p_i} m\cdot l(x_j) = \sum_{j\in p_i} l \pa{
+    \sum _{p_k \ni j} m}$ è il costo pagato dall'utente $i$ per
+  percorrere il percorso $p_i$.
 
   \begin{myoss}
     Dato $i$ e fissato $p^*_{-i}$ stiamo minimizzando la funzione
-    \[ p_i \longmapsto u_i\pa{p_i,p^*_{-i}} \]
+    \[ p_i \longmapsto u_i\pa{p_i,p^*_{-i}} = \sum_{j\in p_i} l \pa{ m
+        + \sum _{p^*_k \ni j, k\neq i} m}\]
   \end{myoss}
 \end{frame}
 
 \begin{frame}{Equilibrio per molti giocatori}
   \begin{myoss}
     Dato $i$ e fissato $p^*_{-i}$ stiamo minimizzando la funzione
-    \[ p_i \longmapsto u_i\pa{p_i,p^*_{-i}} \]
+    \[ p_i \longmapsto u_i\pa{p_i,p^*_{-i}} = \sum_{j\in p_i} l \pa{ m
+        + \sum _{p^*_k \ni j, k\neq i} m}\]
   \end{myoss}
   Dato $p^*_{-i}$ l'utente $i$ sta scegliendo il percorso meno
   costoso.
@@ -531,7 +541,7 @@
     indichiamo con $x^{WE}(R)$ una tale soluzione.
   \end{mydef}
 
-  \begin{myteo}[Realazione tra gli equilibri di Nash e
+  \begin{myteo}[Relazione tra gli equilibri di Nash e
     Wardrop\footnote{A. Haurie and P. Yarcotte, On the Relationship
       between Nash-Cournot and Wardrop Equilibria, NETWORKS Vol 15(1985) 295-308, teoremi 3.1 e 3.2}]
     Sotto opportune ipotesi, data una rete $R$ e delle sue approssimazioni
@@ -561,7 +571,7 @@
     \sum_{j\in p_1} l_j\pa{x^{WE}_j} &= 1 & \sum_{j\in p_2} l_j\pa{x^{WE}_j} &= 1
   \end{align*}
   \begin{align*}
-    C\pa{x^{SO}} = \frac{3}{4} && C\pa{x^{WE}} = 1
+    C\pa{x^{WE}} = 1
   \end{align*}
 \end{frame}
 
@@ -695,12 +705,12 @@
   Siamo interessati a capire quanto può peggiorare il costo, definiamo
   per ogni rete $R \in \mathcal{R}$ la quantità
   \[ \frac{C\pa{ x^{SO}}}{C\pa{ x^{WE}}} \]
-  \begin{mydef}[Prezzo dell'anarchia (PoA)]
+  \begin{block}{Prezzo dell'anarchia (PoA)}
     Dato $\mathcal{R}' \subseteq \mathcal{R}$ siamo interessati alla
     quantità
     \[ \inf _{R\in \mathcal{R}'} \frac{C\pa{ x^{SO}}}{C\pa{
           x^{WE}}} \]
-  \end{mydef}
+  \end{block}
 \end{frame}
 
 \begin{frame}{PoA per funzioni convesse}
@@ -795,7 +805,7 @@
     & $C\pa{x^{SO}}$ & $C\pa{x^{WE}}$ \\
     \hline
     \onslide<2->{Senza 1-2} & $\sfrac{3}{2}$ & $\sfrac{3}{2}$ \\
-    \onslide<3->{Con 1-2 & $\sfrac{3}{2}$ & $1$}
+    \onslide<3->{Con 1-2 & $\sfrac{3}{2}$ & $2$}
   \end{tabular}
 \end{frame}
 
@@ -811,6 +821,38 @@
     \end{itemize}
     Scriviamo $R_0\subseteq R$.
   \end{mydef}
+\end{frame}
+
+\begin{frame}{Esempio}
+  \begin{center}
+    \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70},rnode/.style={circle,fill=green!50,minimum size=0.65cm}]
+      \node[mnode] (0) at (0,0) {$s$};
+      \node[mnode] (1) at (2,0) {};
+      \node[mnode] (2) at (3.7,-1) {};
+      \node[mnode] (3) at (6,0) {$t$};
+      \node[rnode] (4) at (2,-2) {$s_0$};
+      \node[rnode] (5) at (5,-2) {$t_0$};
+      \node[rnode] (6) at (3,-3) {};
+      \node[rnode] (7) at (4,-3) {};
+      \draw [->] (0) to (1);
+      \draw [->] (1) to (2);
+      \draw [->] (2) to (3);
+      \draw [->] (1) to (3);
+      \draw [->] (0) to (4);
+      \draw [->] (2) to (3);
+      \draw [->] (1) to (4);
+      \draw [->] (5) to (3);
+      \draw [->] (4) to (2);
+      \draw [->] (2) to (5);
+      \draw [->,color=green] (4) to (5);
+      \draw [->,color=green] (4) to (6);
+      \draw [->,color=green] (6) to (7);
+      \draw [->,color=green] (7) to (5);
+      \draw [->,color=green] (6) to (5);
+      \draw [->,color=red] (-1,0) -- (0) ;
+      \draw [->,color=red] (3) -- (7,0) ;
+    \end{tikzpicture}
+  \end{center}
 \end{frame}
 
 \begin{frame}{Paradosso di Braess}
@@ -855,7 +897,7 @@
 
 \begin{frame}{Instradamento dentro un provider}
   \begin{mydef}[Latenza effettiva]
-    Dato $X_0\in\mathbb{R}$ definiamo $L\pa{X_0}$ il costo globale di
+    Dato $X_0\in\mathbb{R}^+$ definiamo $L\pa{X_0}$ il costo globale di
     una soluzione \textbf{socialmente ottima} di $R_0$ con $X_0$ unità
     di traffico, definiamo quindi la \textbf{latenza effettiva} di
     $R_0$ come
@@ -868,9 +910,9 @@
   \begin{mylem}
     La funzione $l_0$ è continua, non negativa e non decrescente.
   \end{mylem}
-  \begin{mylem}
-    Se $R\in \mathcal{R}^{conv}$ allora $L_0$ è convessa.
-  \end{mylem}
+%  \begin{mylem}
+%    Se $R\in \mathcal{R}^{conv}$ allora $L_0$ è convessa.
+%  \end{mylem}
   \begin{mylem}
     Sia $R\in \mathcal{R}^{aff}$ allora $l_0$ è concava.
   \end{mylem}
@@ -938,26 +980,30 @@
       % \draw [->,color=red] (1) to [bend left] node[below,color=blue]{$1/2$} (3);
       % \draw [->,color=red] (2) to [bend right] node[above,color=blue]{$1/2$} (3);
       \draw [->,color=red] (3) -- (9,0) ;
-      \only<2> {
-        \draw [dashed,->] (1) to node {$\tilde l_0(X_0)$}(2) ;
-      }
+      % \only<2> {
+      %   \draw [dashed,->] (1) to node {$\tilde l_0(X_0)$}(2) ;
+      % }
       \onslide<3-> {
         \draw [dashed,->] (1) to node {$l_0(X_0)$}(2) ;
       }
     \end{tikzpicture}
   \end{center}
+  \only<1>{
+    \vspace{10cm}
+  }
   \only<2>{
     Se il traffico viene instradato secondo un equilibrio di Wardrop
     abbiamo:
-    \[ \tilde l_0(X_0) = \min\pa{0.31,0.4X_0} \]
-    con un costo globale $C\pa{x^{WE}(R)} = 4.19$.
+    % \[ \tilde l_0(X_0) = \min\pa{0.31,0.4X_0} \]
+    un costo globale $C\pa{x^{WE}(R)} = 4.19$.
+    \vspace{2cm}
   }
   \only<3>{
     Se il traffico viene ottimizzato dentro il provider abbiamo:
     \[ l_0(X_0) = \left\{ 
         \begin{matrix}
           0.4X_0 & \text{se }0\le X_0\le 0.3875 \\
-          0.31 - \frac{0.0961}{1.6X_0} & \text{se } X_0 \ge 0.8375
+          0.31 - \frac{0.0961}{1.6X_0} & \text{se } X_0 \ge 0.3875
         \end{matrix}
         \right.
       \]
@@ -1211,6 +1257,7 @@
                             _{i\in\mathcal{I}}\pa{ R - l_i\pa{x_i}}x_i
       \\
       \text{tale che }\;\; & x\ge 0\\
+      & l_i(x) \le R \\
       & \sum _{i\in \mathcal{I}} x_i \le d
     \end{align*}
     indichiamo una tale soluzione con $x^S$.
