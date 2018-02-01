@@ -96,7 +96,7 @@
 
 
 
-\title{Problemi di minimo su reti di comunicazioni e teoria dei giochi}
+\title{Problemi di instradamento su reti}
 \date{\today}
 \author{Enrico Polesel}
 %\institute{Universit\`a di Pisa}
@@ -326,18 +326,6 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Strategie}
-  \begin{mydef}[Strategia dominante]
-    Per un giocatore $i\in\mathcal{I}$ un'azione $s_i\in S_i$ è una
-    strategia dominante se:
-    \[ \forall s_{-i} \in S_{-i}\;\; \forall s_i' \in S_i\;\;\;
-      u_i\pa{s_i,s_{-i}} \ge u_i\pa{s_i',s_{-i}} \]
-  \end{mydef}
-
-  Ci aspettiamo che un giocatore razionale giochi una strategia
-  dominante, se esiste.
-\end{frame}
-
 \begin{frame}{Dilemma del prigioniero}
   Due criminali vengono arrestati per aver commesso un reato, hanno a
   disposizione due scelte: collaborare o non collaborare con la
@@ -351,9 +339,45 @@
     Collaborare & \multicolumn{1}{|c|}{$-1,-5$} & \multicolumn{1}{|c|}{$-4,-4$}  \\
     \cline{2-3}
   \end{tabular}
+  \pause \vfill
 
   \begin{block}{Strategia dominante}
-    Per entrambi la strategia ``collaborare'' è una strategia dominante.
+    Ad entrambi conviene giocare la strategia ``collaborare'', cioè
+    questa è una \textbf{strategia dominante}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Strategie}
+  \begin{mydef}[Strategia dominante]
+    Per un giocatore $i\in\mathcal{I}$ un'azione $s_i\in S_i$ è una
+    strategia dominante se:
+    \[ \forall s_{-i} \in S_{-i}\;\; \forall s_i' \in S_i\;\;\;
+      u_i\pa{s_i,s_{-i}} \ge u_i\pa{s_i',s_{-i}} \]
+  \end{mydef}
+
+  Ci aspettiamo che un giocatore razionale giochi una strategia
+  dominante, se esiste.
+\end{frame}
+
+\begin{frame}{Dilemma del prigioniero con suicidio}
+    \begin{tabular}{rccc}
+    & Non collaborare & Collaborare & Suicidarsi \\
+    \cline{2-4}
+    Non collaborare & \multicolumn{1}{|c|}{$-2,-2$} & \multicolumn{1}{|c|}{$-5,-1$} & \multicolumn{1}{|c|}{$0,-20$}  \\
+    \cline{2-4}
+    Collaborare & \multicolumn{1}{|c|}{$-1,-5$} & \multicolumn{1}{|c|}{$-4,-4$}  & \multicolumn{1}{|c|}{$-4,-20$} \\
+    \cline{2-4}
+    Suicidarsi & \multicolumn{1}{|c|}{$-20,0$} & \multicolumn{1}{|c|}{$-20,-4$}  & \multicolumn{1}{|c|}{$-20,-20$} \\
+    \cline{2-4}
+  \end{tabular}
+  
+  In questo caso non c'è una strategia dominante.
+  \pause \vfill
+
+  \begin{block}{Equilibrio di Nash}
+    Nessun giocatore può trarre del vantaggio spostandosi dalla
+    strategia $\pa{\text{Collaborare},\text{Collaborare}}$, cioè
+    questa è un \textbf{equilibrio di Nash}.
   \end{block}
 \end{frame}
 
@@ -374,26 +398,6 @@
 
     Il viceversa in generale è falso.
   \end{myoss}
-\end{frame}
-
-\begin{frame}{Dilemma del prigioniero con suicidio}
-    \begin{tabular}{rccc}
-    & Non collaborare & Collaborare & Suicidarsi \\
-    \cline{2-4}
-    Non collaborare & \multicolumn{1}{|c|}{$-2,-2$} & \multicolumn{1}{|c|}{$-5,-1$} & \multicolumn{1}{|c|}{$0,-20$}  \\
-    \cline{2-4}
-    Collaborare & \multicolumn{1}{|c|}{$-1,-5$} & \multicolumn{1}{|c|}{$-4,-4$}  & \multicolumn{1}{|c|}{$-4,-20$} \\
-    \cline{2-4}
-    Suicidarsi & \multicolumn{1}{|c|}{$-20,0$} & \multicolumn{1}{|c|}{$-20,-4$}  & \multicolumn{1}{|c|}{$-20,-20$} \\
-    \cline{2-4}
-  \end{tabular}
-  \vfill
-  
-  In questo caso non c'è una strategia dominante.
-
-  \begin{block}{Equilibrio di Nash}
-    $\pa{\text{Collaborare},\text{Collaborare}}$ è un equilibrio di Nash.
-  \end{block}
 \end{frame}
 
 \begin{frame}{Esempi}
@@ -457,9 +461,9 @@
       \begin{tabular}{rcc}
         & Link $1$ & Link $2$ \\
         \cline{2-3}
-        Link $1$ & \multicolumn{1}{|c|}{$1,1$} & \multicolumn{1}{|c|}{$0.5,1$}  \\
+        Link $1$ & \multicolumn{1}{|c|}{$-1,-1$} & \multicolumn{1}{|c|}{$-0.5,-1$}  \\
         \cline{2-3}
-        Link $2$ & \multicolumn{1}{|c|}{$1,0.5$} & \multicolumn{1}{|c|}{$1,1$}  \\
+        Link $2$ & \multicolumn{1}{|c|}{$-1,-0.5$} & \multicolumn{1}{|c|}{$-1,-1$}  \\
         \cline{2-3}
       \end{tabular}
       \vspace{3px}
@@ -482,10 +486,9 @@
   \textbf{insieme finito di giocatori}, quindi dobbiamo
   \textbf{discretizzare il traffico}.
 
-  Ma l'equilibrio di Nash potrebbe non esiste (o non essere unico) e
+  Ma l'equilibrio di Nash potrebbe non esistere (o non essere unico) e
   potrebbe essere difficile da calcolare (diventa un problema di
-  programmazione intera).
-  \vfill
+  programmazione intera).  \vfill
 
   Concentriamoci su problemi con una sorgente e una destinazione in
   cui il traffico è formato da unità discrete omogenee.
@@ -1207,6 +1210,7 @@
   vettore $x\in \mathbb{R}_+^\mathcal{I}$ è \textbf{soluzione del
     problema} se:
   \begin{align*}
+    x_i & \ge 0 \\
     l_i(x_i) + p_i &\le R \\
     \sum _{i\in \mathcal{I}} x_i &\le d 
   \end{align*}
@@ -1342,8 +1346,20 @@
   \end{myteo}
 \end{frame}
 
-\begin{frame}[plain]
-  \titlepage
+\begin{frame}{Riferimenti}
+  \begin{itemize}
+  \item I. Menache e A. Ozdaglar, \textit{Network Games}, Morgan \&
+    Claypool Publishers, 2010
+  \item D. Acemoglu, R. Johari e A. Ozdaglar, \textit{Partially
+      Optimal Routing, IEEE Journal on Selected Areas in
+      Communications}, vol. 25, No. 6, August 2007
+  \item D. Acemoglu, A. Ozdaglar, \textit{Competition and Efficiency
+      in Congested Markets, Mathematics of Operations Research},
+    Vol. 32, No. 1, February 2007
+  \item A. Haurie and P. Yarcotte, \textit{On the Relationship between
+      Nash-Cournot and Wardrop Equilibria}, NETWORKS Vol 15(1985)
+    295-308
+  \end{itemize}
 \end{frame}
 
 
