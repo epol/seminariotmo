@@ -10,6 +10,7 @@
 \usepackage{graphicx}
 % \usepackage{fullpage}
 \usepackage{hyperref}
+\usepackage[T1]{fontenc}
 \usepackage[utf8x]{inputenc}
 \usepackage[italian]{babel}
 %\usepackage{lmodern}
@@ -149,7 +150,8 @@ semplice\footnote{\url{https://xlinux.nist.gov/dads/HTML/allSimplePaths.html}}
 
 In figura \ref{fig:esempio-rete} si vede un esempio di rete.
 
-\begin{figure}[h]
+\begin{figure}[ht]
+  \centering
   \begin{tikzpicture}[mnode/.style={circle,fill=blue!20},>=latex]
     \node[mnode] (1) at (0,0) {1};
     \node[mnode] (2) at (2,2) {2};
@@ -207,7 +209,11 @@ data dalla seguente definizione:
   \textbf{continue} e \textbf{non decrescenti}.
 \end{mydef}
 
-TODO: $\mathcal{R}$.
+Chiamiamo $\mathcal{R}$ l'insieme di tutte le possibili istanze,
+$\mathcal{R}^{aff}$ il sottoinsieme delle istanze con funzioni costo
+affini, $\mathcal{R}^{conv}$ il sottoinsieme delle istanze con funzioni costo
+convesse e $\mathcal{R}^{conc}$ il sottoinsieme delle istanze con
+funzioni costo concave.
 
 Per descrivere un possibile schema secondo cui il traffico può
 disporsi utilizziamo due vettori: $\bra{x_j}_{j\in A}$ per descrivere
@@ -229,8 +235,114 @@ descrivono un possibile schema se soddisfano la definzione di soluzione:
   \end{itemize}
 \end{mydef}
 
+Dato un percorso $p\in P$ e una soluzione $x$ possiamo scrivere il
+costo pagato dagl'utenti instradati su quel percorso come:
+\[ c_p\pa{x} = \sum _{j\in p} l_j\pa{x_j} \]
+sommando il costo pagato su ogni percorso pesato sulla quantit\`a di
+traffico di quel percorso otteniamo
+\[ \sum _{p\in P} \pa{ x_p \sum _{j\in p} l_j\pa{x_j}}  = \sum _{j\in
+    A} l_j\pa{x_j}x_j \]
+questa quantit\`a rappresenta il costo pagato complessivamente dagli utenti.
 
+\begin{mydef}[Costo globale di una soluzione]
+  \[ C\pa{x} = \sum _{j\in A} l_j\pa{x_j}x_j \]  
+\end{mydef}
 
+\subsection{Instramento ottimo}
+\label{sec:instramento-ottimo}
+
+Data un'istanza $R$ ci chiediamo se esiste una soluzione che minimizza
+il costo globale della soluzione.
+
+\begin{mydef}[Instramento socialmente ottimo]
+  Chiamiamo \textbf{instradamento socialmente ottimo} di $R$ una
+  soluzione che minimizza la funzione costo $C$. 
+\end{mydef}
+
+Trovare un instradamento socialmente ottimo equivale a risolvere il
+seguente problema di minimizzazione:
+\begin{align*}
+      \text{minimizzare}\;\; & \sum _{j\in A} x_j l_j(x_j) \\
+      \text{tale che}\;\; &   x_p \ge 0 & \forall p\in P \\
+      & x_j = \sum_{p\in P,p\ni j} x_p & \forall j\in A \\
+      &\sum_{p\in P_i} x_p = X_i & \forall i\in W
+\end{align*}
+
+\begin{mypro}
+  La regione di spazio definita dai vincoli della definizione di
+  soluzione \`e un poliedro convesso e compatto
+\end{mypro}
+\begin{proof}
+  I vincoli sono tutti lineari e descrivono insiemi chiusi, quindi la
+  regione \`e un poliedro chiuso, se dimostriamo che \`e anche
+  limitato abbiamo la tesi.
+
+  Fissato $i\in W$, sappiamo che per ogni $p'\in P_i$ si ha $x_{p'} \ge
+  0$, quindi fissato $p\in P$ si ha
+  \[ X_i = \sum _{p'\in P_i} x_{p'} \Rightarrow x_p \le X_i \]
+  quindi per ogni $p\in P_i$ vale $0\le x_p \le X_i$ e quindi le
+  variabili $\bra{x_p}_{p\in P}$ sono limitate.
+
+  Fissato $j\in A$ si ha:
+  \[ x_j = \sum _{p\ni j} x_p \ge 0 \]
+  \[ x_j = \sum _{p\ni j} x_p \le \sum _{p\in P} x_p = \sum _{i\in W}
+    \sum _{p\in P_i} x_p = \sum _{i\in W} X_i \]
+  quindi per ogni $j\in A$ vale $0\le x_j \le \sum _{i\in W} X_i$ e
+  quindi le variabili $\bra{x_j}_{j\in A}$ sono limitate.
+\end{proof}
+
+\begin{myteo}[Esistenza dell'instradamento ottimo]
+  Data un'instanza $R$ esiste sempre almeno un instradamento ottimo.
+\end{myteo}
+\begin{proof}
+  La funzione costo \`e somma di prodotto di funzioni continue, quindi
+  \`e continua. I vincoli di soluzione formano un insieme
+  compatto. Per il teorema di Weierstrass la funzione ammette minimo.
+\end{proof}
+\begin{myoss}
+  La soluzione socialmente ottima pu\`o non essere unica (vedi
+  l'esempio di figura \ref{fig:esempio-so-nonunica}), ma il suo costo
+  globale lo \`e.
+\end{myoss}
+\begin{figure}[ht]
+  \centering
+  \begin{tikzpicture}[mnode/.style={circle,fill=blue!20},>=latex]
+    \node[mnode] (1) at (0,0) {s};
+    \node[mnode] (2) at (2,0) {t};
+    \draw [->] (1) to [bend left] node[above] {1} (2);
+    \draw [->] (1) to [bend right] node[below] {1} (2);
+    \draw [->,color=red] (-1,0) to node[above] {1} (1);
+    \draw [->,color=red] (2) to (3,0);
+  \end{tikzpicture}  
+  \caption{Esempio di rete in cui ogni soluzione \`e ottima}
+  \label{fig:esempio-so-nonunica}
+\end{figure}
+
+Chiamiamo (con un leggero abuso di notazione) $x^{SO}\pa{R}$ una
+soluzione socialmente ottima di $R$. Nonostante questo vettore non sia
+ben definito, \`e ben definita la quantit\`a $C\pa{x^{SO}\pa{R}}$.
+
+\begin{myes}[Esempio di Pigou]
+  TODO
+  \begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70}]
+      \node[mnode] (1) at (0,0) {s}; 
+      \node[mnode] (2) at (3,0) {t};
+      \draw [->] (1) to [bend left] node[above] {$l_1(x) = x$} (2);
+      \draw [->] (1) to [bend right] node[below] {$l_2(x) = 1$} (2);
+      \draw [->,color=red] (-4,0) -- node[above] {1 unità di traffico} (1) ;
+      \draw [->,color=red] (2) --  (5,0) ;
+      \node at (7,0) {};
+    \end{tikzpicture}
+    \caption{Esempio di Pigou}
+    \label{fig:esempio-pigou}
+  \end{figure}
+  La soluzione ottima è $x_1 = x_2 = \frac{1}{2}$ con costo
+  \[ C(x) = \frac{1}{4} + \frac{1}{2} = \frac{3}{4} \]
+  Metà del traffico arriverà con una latenza $\frac{1}{2}$ e metà con
+  latenza $1$.
+\end{myes}
 
 \section{Instradamento di Wardrop}
 
