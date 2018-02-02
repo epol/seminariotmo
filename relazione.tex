@@ -118,7 +118,156 @@ il proprio guadagno.
 
 \section{Modello e instradamento socialmente ottimo}
 
+\subsection{Modello}
+
+Modellizziamo le nostre reti come grafi diretti dove per ogni arco è
+data una funzione costo in funzione del traffico che attraversa l'arco
+stesso (il costo è quindi una funzione ``locale'').
+
+Supponiamo che le funzioni costo siano continue, non negative e non
+decrescenti. Quest'ultima ipotesi sulla monotonia può essere
+giustificata dall'idea che le prestazioni di una strada (o un
+collegamento) diminuiscono con l'aumentare del traffico.
+
+Dato il traffico che deve attraversare la nostra rete, lo dividiamo in
+base alle coppie ``sorgente-destinazione'' e indicizziamo queste
+coppie con un qualche insieme $W$, descriviamo il traffico con tre
+vettori: vettore delle sorgenti, vettore delle destinazioni e vettore
+delle quantità di traffico da instradare.
+
+Supponiamo tutto il traffico \textbf{infinitamente divisibile}, cioè
+possiamo dividerlo sulle nostre strade in rapporti arbitrari. Questo
+confligge con la realtà delle reti stradali e internet in cui il
+traffico è discreto, ma ne descrive bene il comportamento quando la
+quantità di utenti è sufficientemente grande.
+
+Infine supponiamo che ci venga fornito per ogni coppia
+``sorgente-destinazione'' l'insieme dei percorsi non contenenti cicli
+che le congiungono. Questo ci permette di non dover trattare la
+costruzione di questi insiemi (che comunque è un problema
+semplice\footnote{\url{https://xlinux.nist.gov/dads/HTML/allSimplePaths.html}}
+
+In figura \ref{fig:esempio-rete} si vede un esempio di rete.
+
+\begin{figure}[h]
+  \begin{tikzpicture}[mnode/.style={circle,fill=blue!20},>=latex]
+    \node[mnode] (1) at (0,0) {1};
+    \node[mnode] (2) at (2,2) {2};
+    \node[mnode] (3) at (4,2) {3};
+    \node[mnode] (4) at (3,-2) {4};
+    \node[mnode] (5) at (6,0) {5};
+    \draw [->] (1) to [bend left] (2);
+    \node at (1,1) {$l_1(x_1)$};
+    \draw [->] (2) to [bend right] (3);
+    \node at (3,2.7) {$l_2(x_2)$};
+    \draw [->] (3) to [bend right] (2);
+    \node at (3,1.3) {$l_3(x_3)$};
+    \draw [->] (3) to [bend left] (5);
+    \node at (5.5,1.7) {$l_4(x_4)$};
+    \draw [->] (1) to [bend right] (4);
+    \node at (0.6,-1.7) {$l_5(x_5)$};
+    \draw [->] (3) -- (4);
+    \node at (4,0) {$l_6(x_6)$};
+    \draw [->] (4) -- (2);
+    \node at (2,0) {$l_7(x_7)$};
+    \draw [->] (4) to [bend right] (5);
+    \node at (5,-1) {$l_8(x_8)$};
+
+    \node (S1) at (-2,0) {};
+    \node (S2) at (-1,2) {};
+    \node (T1) at (8,0) {};
+    \node (T2) at (5.5,-2) {};
+    \draw[->] (S1) -- node[above]{traffico 1} (1);
+    \draw[->] (5) -- node[above]{traffico 1} (T1);
+    \draw[->] (S2) -- node[above]{traffico 2} (2);
+    \draw[->] (4) -- node[below]{traffico 2} (T2);
+  \end{tikzpicture}
+  \caption{Esempio di rete e traffico}
+  \label{fig:esempio-rete}
+\end{figure}
+
+Formalizzando quanto appena detto, un'instanza del nostro problema è
+data dalla seguente definizione:
+
+\begin{mydef}[Instanza di instradamento]
+  Un'\textbf{istanza di instradamento} (\textit{routing instance} o
+  più brevemente \textbf{rete}) è $R=(V,A,P,s,t,X,l)$ con:
+  \begin{itemize}
+  \item $(V,A)$ il grafo diretto,
+  \item $s = \bra{s_i}_{i\in W}$ vettore delle sorgenti (per un opportuno $W$),
+  \item $t = \bra{t_i}_{i\in W}$ vettore delle destinazioni,
+  \item $P = \cup _{i\in W} P_i$ con $P_i$ insieme dei
+    percorsi da $s_i$ a $t_i$,
+  \item $X = \bra{X_i}_{i\in W}$ dove $X_i$ rappresenta la quantità di
+    traffico da instradare da $s_i$ a $t_i$,
+  \item $l = \bra{l_j}_{j\in A}$ dove $l_j(x_j)$ è il costo del link
+    $j$ con un traffico $x_j$.
+  \end{itemize}
+  Supponiamo che le funzioni $l_j$ siano \textbf{non negative},
+  \textbf{continue} e \textbf{non decrescenti}.
+\end{mydef}
+
+TODO: $\mathcal{R}$.
+
+Per descrivere un possibile schema secondo cui il traffico può
+disporsi utilizziamo due vettori: $\bra{x_j}_{j\in A}$ per descrivere
+il traffico su ogni arco e $\bra{x_p}_{p\in P}$ per descrivere il
+traffico su ogni percorso.
+
+Questi due vettori (che esprimiamo come un unico vettore $x$)
+descrivono un possibile schema se soddisfano la definzione di soluzione:
+
+\begin{mydef}[Soluzione di un'instanza]
+  Data un'istanza $R=(V,A,P,s,t,X,l)$ un vettore
+  $x = \bra{x_j}_{j\in A} \cup \bra{x_p}_{p\in P}$ è \textbf{soluzione} se:
+  \begin{itemize}
+  \item instradiamo solo quantità non negative di traffico: \[ \forall p\in P\;\; x_p \ge 0\]
+  \item il traffico su ogni arco è dato dalla somma del traffico di
+    ogni percorso che lo attraversa: \[ \forall j\in A\;\; x_j = \sum_{p\in P,p\ni j} x_p\]
+  \item la quantità di traffico instradata tra ogni coppia è proprio
+    quella richiesta dal problema: \[\forall i\in W\;\; \sum_{p\in P_i} x_p = X_i\]
+  \end{itemize}
+\end{mydef}
+
+
+
+
 \section{Instradamento di Wardrop}
+
+
+\begin{myteo}
+  Il costo globale dell'equilibrio di Wardrop è unico (TODO)
+\end{myteo}
+\begin{proof}
+  Abbiamo visto che $x$ è un equilibrio di Wardrop se e solo se è
+  minimo (vincolato) della funzione $f(x) = \sum _{j\in A} \int _0
+  ^{x_j} l_j(z)\de z$, abbiamo anche visto che la funzione $f$ è
+  convessa.
+
+  Sia $L_j(x_j) = \int _0 ^{x_j} l_j(z)\de z$, queste sono tutte
+  funzioni convesse per le ipotesi sulle funzioni $l_j$.
+
+  Siano $x,y$ due punti di minimo vincolati di $f$, per la convessità
+  sappiamo che per ogni $t\in\bra{0,1}$ si ha
+  \[ f\pa{ tx + (1-t)y} \le tf(x) + (1-t)f(y) \]
+  ma in realtà questa relazione vale con l'uguaglianza perché
+  $f(x)=f(y)$ è un punto di minimo.
+
+  Ricordando che anche le $L_j$ sono convesse possiamo scrivere
+  \begin{align*}
+    f\pa{ tx + (1-t)y} & = \sum _{j\in A} L_j\pa{tx_j + (1-t)y_j} \\
+    & \le \sum _{j\in A} \pa{ tL_j(x_j) + (1-t)L_j(y_j)} \\
+    & = t \sum _{j\in A} L_j(x_j) + (1-t)\sum _{j\in A} L_j(y_j) \\
+    & = tf(x) + (1-t)f(y)
+  \end{align*}
+  ricordando l'equazione precedente si può dedurre che per ogni $j\in
+  A$ si ha
+  \[ L_j\pa{tx_j + (1-t)y_j} = tL_j(x_j) + (1-t)L_j(y_j) \]
+  quindi le $L_j$ sono lineari in $\bra{x_j,y_j}$, ma questo accade se
+  e solo se le $l_j$ sono costanti negli stessi intervalli.
+
+  Quindi per ogni $j\in A$ abbiamo $l_j(x) = l_j(y)$ e quindi $C(x) = C(y)$.  
+\end{proof}
 
 \section{Instradamento parzialmente ottimo}
 
