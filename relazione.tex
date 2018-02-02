@@ -323,7 +323,8 @@ soluzione socialmente ottima di $R$. Nonostante questo vettore non sia
 ben definito, \`e ben definita la quantit\`a $C\pa{x^{SO}\pa{R}}$.
 
 \begin{myes}[Esempio di Pigou]
-  TODO
+  \label{es:esempio-pigou}
+  Vediamo l'esempio di Pigou in Figura \ref{fig:esempio-pigou}
   \begin{figure}[ht]
     \centering
     \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70}]
@@ -338,13 +339,169 @@ ben definito, \`e ben definita la quantit\`a $C\pa{x^{SO}\pa{R}}$.
     \caption{Esempio di Pigou}
     \label{fig:esempio-pigou}
   \end{figure}
-  La soluzione ottima è $x_1 = x_2 = \frac{1}{2}$ con costo
-  \[ C(x) = \frac{1}{4} + \frac{1}{2} = \frac{3}{4} \]
-  Metà del traffico arriverà con una latenza $\frac{1}{2}$ e metà con
-  latenza $1$.
+  Qui l'insieme dei percorsi coincide con l'insieme degl'archi, quindi
+  possiamo usare solo un vettore di variabili $\bra{x_1, x_2}$.
+
+  La funzione costo è: $C\pa{x} = x_1^2 + x_2$, aggiungendo la
+  condizione $x_1 + x_2 = 1$ si ottiene
+  \[ C\pa{x} = x_1 ^2 + 1 - x_1 \]
+  il cui minimo si ottiene per
+  \[ x^{SO}_1 = x^{SO}_2 = \frac{1}{2} \]
+  abbiamo anche
+  \[ C\pa{x^{SO}} = \frac{3}{4} \]
+
+  Possiamo osservare che metà del traffico ha una latenza di
+  $\frac{1}{2}$ mentre l'altra metà ha una latenza di $1$, quindi gli
+  utenti stanno incontrando latenze diverse.
 \end{myes}
 
 \section{Instradamento di Wardrop}
+
+\subsection{Motivazioni}
+\label{sec:wardrop-motivazioni}
+
+Vogliamo ora prevedere cosa succede quando gli utenti della nostra
+rete decidono autonomamente quale percorso percorrere in modo da
+massimizzare il proprio guadagno.
+
+Abbiamo già osservato che nell'esempio di Pigou (esempio
+\ref{es:esempio-pigou}) gli utenti incontreranno tempi di percorrenza
+diversi, possiamo immaginare che in questo caso alcuni utenti
+``furbi'' cercheranno di spostarsi sulla strada più veloce, anche al
+costo di rallentarla, pur di ottenere un tempo di percorrenza minore.
+
+Per descrivere come si comportano gli utenti quando cercano di
+massimizzare il proprio guadagno (cioè quando diventano egoisti)
+potremmo utilizzare la teoria dei giochi (vedi l'appendice
+\ref{sec:teoria-giochi}) e, in particolare, cercare un equilibrio di
+Nash di un qualche gioco costruito sulla rete.
+
+Ricordiamo che un gioco è dato da
+$\pa{\mathcal{I}, \pa{S_i}_{i\in\mathcal{I}},
+  \pa{u_i}_{i\in\mathcal{I}}}$ dove $\mathcal{I}$ è l'insieme
+\textbf{finito} dei giocatori.
+
+Siccome abbiamo supposto il traffico infinitamente divisibile, non
+possiamo costruire direttamente un gioco a partire dalla nostra rete,
+abbiamo quindi tre strade:
+\begin{enumerate}
+\item definire direttamente un nuovo concetto di equilibrio su reti
+  senza giustificarlo mediante la teoria dei giochi;
+\item costruire \textbf{discretizzazioni} successive del traffico che
+  approssimino il caso continuo, calcolare per ognuna di queste
+  approssimazioni un equilibrio di Nash e farne un limite;
+\item introdurre il concetto di \textbf{giochi non atomici} (ed il
+  loro equilibrio di Nash) e applicare direttamente questa nuova
+  teoria al nostro problema.
+\end{enumerate}
+
+Noi vedremo a grandi linee la seconda strada (discretizzare) ma senza
+formalizzarla, ma alla fine daremo una definizione indipendente e
+formale (come previsto dal primo metodo) di \textbf{equilibrio di
+  Wardrop}.
+
+L'idea è, quindi, di discretizzare il traffico in tante unità discrete
+e omogenee e applicare un equilibrio di Nash. Supponiamo, per
+semplicità, che tutto il traffico debba essere instradato tra un'unica
+sorgente e un'unica destinazione.
+
+\begin{myes}{Esempio di Pigou discretizzato}
+  Riprendiamo l'esempio di Pigou (vedi figura \ref{fig:esempio-pigou})
+  dove abbiamo discretizzato il traffico a due unità (che saranno i
+  nostri giocatoti).
+
+  Traducendo l'instanza nel formalismo della teoria dei giochi
+  otteniamo:
+  \begin{align*}
+    \mathcal{I} &= \set{1,2} & S_1 = S_2 & = \set{\text{Link 1},
+                                           \text{Link 2}}
+  \end{align*}
+  \begin{table}[!ht]
+    \centering
+    \begin{tabular}{rcc}
+      & Link $1$ & Link $2$ \\
+      \cline{2-3}
+      Link $1$ & \multicolumn{1}{|c|}{$-1,-1$} & \multicolumn{1}{|c|}{$-0.5,-1$}  \\
+      \cline{2-3}
+      Link $2$ & \multicolumn{1}{|c|}{$-1,-0.5$} & \multicolumn{1}{|c|}{$-1,-1$}  \\
+      \cline{2-3}
+    \end{tabular}
+    \caption{Funzioni guadagno $(u_1,u_2)$, le righe rappresentano la
+      scelta del primo giocatore, le colonne la scelta del secondo}
+    \label{tab:pigou-nash}
+  \end{table}
+
+  Si vede facilmente che per entrambi i giocatori scegliere
+  \textit{Link 1} è una strategia dominante, quindi diciamo che la
+  nuova soluzione è:
+  \begin{align*}
+    x^{N}_1 &= 1 & x^{N}_2 &= 0
+  \end{align*}
+  con un costo globale $C\pa{x^{N}} = 1$.
+\end{myes}
+
+Data un'instanza $R$ e una sua discretizzazione $R_n$, avremo
+l'insieme dei giocatori $\mathcal{I} = \set{1,...,n}$ rappresentante
+le singole unità di traffico con peso $m$, per ogni giocatore
+l'insieme delle strategie disponibili è l'insieme $P$ dei percorsi e
+le funzioni guadagno saranno
+\[ u_i \pa{s} = u_i\pa{s_i, s_{-i}} = - \sum _{j\in s_i}
+  l_j\pa{\sum_{s_k\ni j} m} = -\sum _{j\in s_i} l_j\pa{m + \sum_{s_k\ni
+      j,k\neq i} m} \]
+con $s = \bra{s_i}_{i\in\mathcal{I}} \in P^n$
+
+Possiamo anche scrivere, per semplicità:
+\[ u_i\pa{s_i, s_{-i}} = - \sum _{j\in s_i} l_j\pa{x_j\pa{s_i, s_{-i}}} \]
+
+
+Dalla definizione, $s^*$ è un \textbf{equilibrio di Nash} per $R_n$ se
+e solo se per ogni $i\in \mathcal{I}$ vale
+\[ \forall p\in P \;\; u_i \pa{p,s^*_{-i}} \le u_i\pa{s^*_i,s^*_{-i}} \]
+
+Per $n \to \infty$ avremo che $m\to 0$ e quindi
+\[ x_j\pa{p, s^*_{-i}} \approx x_j\pa{s^*_i, s^*_{-i}} \]
+cioè la scelta di un singolo giocatore non influenza il flusso di ogni
+arco. Ricordando che le funzioni $l_j$ sono continue si ottiene che
+$l_j\pa{x_j\pa{p, s^*_{-i}}} \approx l_j\pa{x_j\pa{s^*_i, s^*_{-i}}}$ da cui:
+\[ u_i\pa{p, s^*_{-i}} = - \sum_{j\in p} l_j\pa{x_j\pa{s^*_i,
+      s^*_{-i}}} = -\sum _{j\in p}l_j\pa{x^*_j} \]
+
+La condizione dell'equilibrio di Nash si può quindi riscrivere come:
+\[ \forall p\in P\;\;\; \sum _{j\in s_i}l_j\pa{x^*_j} \le \sum _{j\in
+    p}l_j\pa{x^*_j} \]
+osservando che $x_p > 0 \Leftrightarrow \exists i\in \mathcal{I}:\;
+s^*_i = p$ otteniamo
+\[ \forall x_p >0, \forall p'\in P \;\;\; \sum _{j\in p}l_j\pa{x^*_j}
+  \le \sum _{j\in p'}l_j\pa{x^*_j} \]
+cioè i percorsi scelti sono quelli che minimizzano il tempo di
+percorrenza, inoltre se anche $x_{p'} > 0$ la relazione vale con il
+segno di uguaglianza (basta scambiare il ruolo delle variabili).
+
+Questo ci porta al primo criterio proposto da
+Wardrop\cite[pag. 345]{wardrop1952} per determinare la distribuzione
+del traffico: \textit{Il tempo di percorrenza di tutte le strade
+  veramente usate è uguale e più piccolo di quello che impiegherebbe
+  un singolo veicolo a percorrere una strada non utilizzata}
+
+Il ragionamento che abbiamo seguito, oltre a non essere ben
+formalizzato, non tiene in considerazione il problema che l'equilibrio
+di Nash potrebbe non esistere per ogni $n$ e quando esiste potrebbe
+non essere unico. Inoltre non abbiamo gestito in alcun modo il
+passaggio al limite che potrebbe non sempre essere fattibile.
+
+In alcuni casi è possibile formalizzare questo ragionamento ottenendo,
+ad esempio, il seguente teorema:
+\begin{myteo}[{\cite[Teorema 3.2]{haurie1985}}]
+  Data un'istanza $R$ e una successione di approssimazioni discrete
+  $R_n$, se per ogni $n$ esiste un equilibrio di Nash per $R_n$ e se
+  le funzioni costo $l_j$ sono strettamente crescenti, allora esiste
+  un'unica soluzione $x$ che rispetta il criterio di Wardrop e tale
+  che per ogni sequenza $x_n$ di soluzioni associate ad un equilibrio
+  di Nash si ha
+  \[ \lim _{n\to \infty} x_n = x^* \]
+\end{myteo}
+
+\subsection{Definizione e esistenza}
 
 
 \begin{myteo}
@@ -388,11 +545,12 @@ ben definito, \`e ben definita la quantit\`a $C\pa{x^{SO}\pa{R}}$.
 \appendix
 
 \section{Teoria dei giochi}
+\label{sec:teoria-giochi}
 
 \cite{menache2011network}
 
 \bibliographystyle{alpha}
 
-\bibliography{menache2011network}
+\bibliography{menache2011network,wardrop1952,haurie1985}
 
 \end{document}
