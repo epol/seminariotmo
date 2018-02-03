@@ -367,8 +367,8 @@ massimizzare il proprio guadagno.
 Abbiamo già osservato che nell'esempio di Pigou (esempio
 \ref{es:esempio-pigou}) gli utenti incontreranno tempi di percorrenza
 diversi, possiamo immaginare che in questo caso alcuni utenti
-``furbi'' cercheranno di spostarsi sulla strada più veloce, anche al
-costo di rallentarla, pur di ottenere un tempo di percorrenza minore.
+``furbi'' cercheranno di spostarsi sulla strada più veloce (anche al
+costo di rallentarla) pur di ottenere un tempo di percorrenza minore.
 
 Per descrivere come si comportano gli utenti quando cercano di
 massimizzare il proprio guadagno (cioè quando diventano egoisti)
@@ -396,21 +396,21 @@ abbiamo quindi tre strade:
 \end{enumerate}
 
 Noi vedremo a grandi linee la seconda strada (discretizzare) ma senza
-formalizzarla, ma alla fine daremo una definizione indipendente e
-formale (come previsto dal primo metodo) di \textbf{equilibrio di
-  Wardrop}.
+formalizzarla, poi nella sezione \ref{sec:wardrop-definizione} daremo
+una definizione indipendente e formale (come previsto dal primo
+metodo) di \textbf{equilibrio di Wardrop}.
 
 L'idea è, quindi, di discretizzare il traffico in tante unità discrete
 e omogenee e applicare un equilibrio di Nash. Supponiamo, per
 semplicità, che tutto il traffico debba essere instradato tra un'unica
 sorgente e un'unica destinazione.
 
-\begin{myes}{Esempio di Pigou discretizzato}
+\begin{myes}[Esempio di Pigou discretizzato]
   Riprendiamo l'esempio di Pigou (vedi figura \ref{fig:esempio-pigou})
   dove abbiamo discretizzato il traffico a due unità (che saranno i
-  nostri giocatoti).
+  nostri giocatori).
 
-  Traducendo l'instanza nel formalismo della teoria dei giochi
+  Traducendo l'istanza nel formalismo della teoria dei giochi
   otteniamo:
   \begin{align*}
     \mathcal{I} &= \set{1,2} & S_1 = S_2 & = \set{\text{Link 1},
@@ -452,7 +452,14 @@ con $s = \bra{s_i}_{i\in\mathcal{I}} \in P^n$
 
 Possiamo anche scrivere, per semplicità:
 \[ u_i\pa{s_i, s_{-i}} = - \sum _{j\in s_i} l_j\pa{x_j\pa{s_i, s_{-i}}} \]
-
+dove
+\[ x_j\pa{s_i,s_{-i}} = \sum_{s_k\ni j} m = \left\{ 
+    \begin{matrix}
+      m + \sum_{s_k\ni j,k\neq i} m & \text{ se } j\in s_i \\
+      \sum_{s_k\ni j,k\neq i} m & \text{ se } j\not\in s_i
+    \end{matrix}
+  \right.
+\]
 
 Dalla definizione, $s^*$ è un \textbf{equilibrio di Nash} per $R_n$ se
 e solo se per ogni $i\in \mathcal{I}$ vale
@@ -460,17 +467,19 @@ e solo se per ogni $i\in \mathcal{I}$ vale
 
 Per $n \to \infty$ avremo che $m\to 0$ e quindi
 \[ x_j\pa{p, s^*_{-i}} \approx x_j\pa{s^*_i, s^*_{-i}} \]
-cioè la scelta di un singolo giocatore non influenza il flusso di ogni
-arco. Ricordando che le funzioni $l_j$ sono continue si ottiene che
-$l_j\pa{x_j\pa{p, s^*_{-i}}} \approx l_j\pa{x_j\pa{s^*_i, s^*_{-i}}}$ da cui:
-\[ u_i\pa{p, s^*_{-i}} = - \sum_{j\in p} l_j\pa{x_j\pa{s^*_i,
+cioè la scelta di un singolo giocatore al limite non influenza il
+flusso di ogni arco. Ricordando che le funzioni $l_j$ sono continue si
+ottiene che
+$l_j\pa{x_j\pa{p, s^*_{-i}}} \approx l_j\pa{x_j\pa{s^*_i, s^*_{-i}}}$
+da cui:
+\[ u_i\pa{p, s^*_{-i}} \approx - \sum_{j\in p} l_j\pa{x_j\pa{s^*_i,
       s^*_{-i}}} = -\sum _{j\in p}l_j\pa{x^*_j} \]
 
 La condizione dell'equilibrio di Nash si può quindi riscrivere come:
 \[ \forall p\in P\;\;\; \sum _{j\in s_i}l_j\pa{x^*_j} \le \sum _{j\in
     p}l_j\pa{x^*_j} \]
 osservando che $x_p > 0 \Leftrightarrow \exists i\in \mathcal{I}:\;
-s^*_i = p$ otteniamo
+s^*_i = p$ otteniamo che al limite
 \[ \forall x_p >0, \forall p'\in P \;\;\; \sum _{j\in p}l_j\pa{x^*_j}
   \le \sum _{j\in p'}l_j\pa{x^*_j} \]
 cioè i percorsi scelti sono quelli che minimizzano il tempo di
@@ -492,20 +501,129 @@ passaggio al limite che potrebbe non sempre essere fattibile.
 In alcuni casi è possibile formalizzare questo ragionamento ottenendo,
 ad esempio, il seguente teorema:
 \begin{myteo}[{\cite[Teorema 3.2]{haurie1985}}]
-  Data un'istanza $R$ e una successione di approssimazioni discrete
-  $R_n$, se per ogni $n$ esiste un equilibrio di Nash per $R_n$ e se
-  le funzioni costo $l_j$ sono strettamente crescenti, allora esiste
-  un'unica soluzione $x$ che rispetta il criterio di Wardrop e tale
-  che per ogni sequenza $x_n$ di soluzioni associate ad un equilibrio
-  di Nash si ha
+  Sia $R\in \mathcal{R}$ un'istanza e $\pa{R_n}_{n\in \mathbb{N}}$ una
+  successione di approssimazioni discrete di $R$, se per ogni $n$
+  esiste un equilibrio di Nash per $R_n$ e se le funzioni costo $l_j$
+  sono strettamente crescenti, allora esiste un'unica soluzione $x$
+  che rispetta il criterio di Wardrop e tale che per ogni sequenza
+  $x_n$ di soluzioni associate ad un equilibrio di Nash si ha
   \[ \lim _{n\to \infty} x_n = x^* \]
 \end{myteo}
 
 \subsection{Definizione e esistenza}
+\label{sec:wardrop-definizione}
 
+Formalizziamo il principio di Wardrop nel caso generale, applicando il
+principio di Wardrop ad ogni coppia sorgente-destinazione otteniamo la
+seguente definizione:
+\begin{mydef}[Equilibrio di Wardrop]
+  Una soluzione $x$ di $R\in \mathcal{R}$ è un \textbf{equilibrio di
+    Wardrop} se per ogni coppia di sorgente-destinazione $(s_i,t_i)$
+  (cioè per ogni $i\in W$) vale:
+  \begin{align*}
+    \sum _{j\in p'} l_j(x_j) &= \sum _{j\in p} l_j(x_j) & \forall
+                                                           p,p'\in P_i \text{ con } x_p >0, x_{p'} >0 \\
+    \sum _{j\in p'} l_j(x_j) &\ge \sum _{j\in p} l_j(x_j) & \forall
+                                                             p,p'\in P_i \text{ con } x_p >0, x_{p'} =0 
+  \end{align*}
+  indichiamo con $x^{WE}(R)$ una tale soluzione.
+\end{mydef}
+
+Osserviamo che due coppie sorgente-destinazione differenti potrebbero
+avere tempi di percorrenza diversi.
+
+Vediamo ora alcuni teoremi che ci assicurano l'esistenza di un
+equilibrio di Wardrop. Come nel caso della soluzione socialmente
+ottima questo equilibrio non sarà in generale unico (quindi la
+notazione $x^{WE}(R)$ non sarebbe ben definita), ma il costo di tale
+soluzione lo sarà (e quindi la quantità $C\pa{x^{WE}\pa{R}}$ sarà ben
+definita).
+
+\begin{myteo}[Beckmann, McGuire and Winsten]
+  Data un'istanza $R\in \mathcal{R}$, una soluzione $x$ è un equilibrio di
+  Wardrop per $R$ se e solo se $x$ è un punto di minimo del problema
+  \begin{align*}
+    \text{minimizzare} \;&  \sum _{j\in A} \int _0 ^ {x_j}
+                           l_j(z)\de z \\
+    \text{con} \;& \sum _{p\in P, p\ni j} x_p = x_j&\forall j\in
+                                                     A\\
+                         & \sum _{p\in P_i} x_p = X_i& \forall i\in W\\
+                         & x_p \ge 0&\forall p\in P        
+  \end{align*}
+\end{myteo}
+\begin{proof}
+  Scriviamo le funzioni:
+  \begin{align*}
+    f(x) &= \sum _{j\in A} \int _0 ^ {x_j} l_j(z)\de z \\
+    g_p(x) &= -x_p & \forall p\in P \\
+    h_j(x) &= \sum _{p\ni j} x_p -x_j & \forall j\in A\\
+    t_i(x) &= \sum _{p\in P_i} x_p - X_i & \forall i\in W
+  \end{align*}
+  
+  Il problema diventa
+  \begin{align*}
+    \text{minimizzare} \;&  f(x) \\
+    \text{con} \;& g_p(x) \le 0 &\forall p \in P \\
+                         & h_j(x) = 0 & \forall j\in A\\
+                         & t_i(x) = 0 & \forall i\in W
+  \end{align*}
+
+  Abbiamo supposto all'inizio le $l_j$ continue, non negative e non
+  decrescenti, quindi $f$ è una funzione convessa. Inoltre i vincoli
+  sono tutti lineari, quindi (per un teorema visto a lezione) $x$ è
+  punto di minimo se e solo se valgono le condizioni di
+  Karush–Kuhn–Tucker in $x$.
+
+  Le KKT in $x$ si scrivono come $\exists \lambda \in \mathbb{R}_+^{\abs{P}}$,
+  $\exists \mu \in \mathbb{R}^{\abs{A}}$,
+  $\exists \theta \in \mathbb{R}^{\abs{W}}$ tali che:
+  \[ 0 = \nabla f(x) + \sum_{p\in P}\lambda _p \nabla g_p(x) + \sum _{j\in
+      A} \mu _j \nabla h_j(x) + \sum _{i\in W} \theta _i \nabla t_i(x) \]
+  \[ \forall p\in P\;\; \lambda _p g_p(x) = 0 \]
+  
+  Scrivendo le condizioni componente per componente otteniamo:
+  \begin{align*}
+    l_j(x_j) - \mu _j =0 && \forall j\in A \\
+    -\lambda _p + \sum _{j\in p}\mu _j + \theta _i =0 && \forall p \in
+                                                      P _i \\
+    \lambda _p x_p =0 && \forall p\in P
+  \end{align*}
+  la condizione di complementarità può essere riscritta come $x_p > 0
+  \rightarrow \lambda _p =0$, le altre come:
+  \begin{align*}
+    l_j(x_j) = \mu _j && \forall j\in A \\
+    \sum _{j\in p}l_j(x_j) = -\theta _i + \lambda _p && \forall p \in
+                                                      P _i
+  \end{align*}
+  dalla seconda utilizzando la complementarietà degli scarti si
+  ottiene:
+  \begin{align*}
+    \forall p\in P_i,\;\; x_p > 0 & \Rightarrow \sum _{p\ni j} l_j(x_j) = -\theta _i \\
+    \forall p\in P_i,\;\; x_p = 0 & \Rightarrow \sum _{p\ni j} l_j(x_j) \ge -\theta _i
+  \end{align*}
+  queste sono proprio le condizioni di Wardrop dove la quantità
+  $-\theta _i$ rappresenta proprio la minima lunghezza effettiva di un
+  percorso tra $s_i$ e $t_i$.
+\end{proof}
+\begin{mycor}
+  Data un'istanza $R\in \mathcal{R}$ esiste sempre un equilibrio di
+  Wardrop per $R$, inoltre se tutte le funzioni costo di $R$ sono
+  strettamente crescenti allora tale equilibrio è unico.
+\end{mycor}
+\begin{proof}
+  Per il teorema precedente il probelema dell'equilibrio di Wardrop è
+  equivalente ad un problema di minimizzazione convessa (dove
+  l'insieme definito dai vincoli è compatto), quindi esiste sempre una
+  soluzione.
+
+  Nel caso in cui le funzioni costo siano strettamente crescenti la
+  funzione obiettivo del problema equivalente è strettamente convessa
+  e quindi la soluzione sarà unica.
+\end{proof}
 
 \begin{myteo}
-  Il costo globale dell'equilibrio di Wardrop è unico (TODO)
+  Il costo globale dell'equilibrio di Wardrop è unico, quindi è ben
+  definita la quantità $C\pa{x^{WE}\pa{R}}$.
 \end{myteo}
 \begin{proof}
   Abbiamo visto che $x$ è un equilibrio di Wardrop se e solo se è
@@ -520,9 +638,10 @@ ad esempio, il seguente teorema:
   sappiamo che per ogni $t\in\bra{0,1}$ si ha
   \[ f\pa{ tx + (1-t)y} \le tf(x) + (1-t)f(y) \]
   ma in realtà questa relazione vale con l'uguaglianza perché
-  $f(x)=f(y)$ è un punto di minimo.
+  $f(x)=f(y)$ è il valore minimo di $f$.
 
-  Ricordando che anche le $L_j$ sono convesse possiamo scrivere
+  Ricordando che anche le $L_j$ sono convesse, quindi possiamo
+  scrivere:
   \begin{align*}
     f\pa{ tx + (1-t)y} & = \sum _{j\in A} L_j\pa{tx_j + (1-t)y_j} \\
     & \le \sum _{j\in A} \pa{ tL_j(x_j) + (1-t)L_j(y_j)} \\
@@ -537,6 +656,16 @@ ad esempio, il seguente teorema:
 
   Quindi per ogni $j\in A$ abbiamo $l_j(x) = l_j(y)$ e quindi $C(x) = C(y)$.  
 \end{proof}
+
+\begin{myes}[Esempio di Pigou]
+  Applicando l'equilibrio di Wardrop all'esempio di Pigou (vedi
+  esempio \ref{es:esempio-pigou}) si ottiene la soluzione:
+  \begin{align*}
+    x^{WE}_1 &= 1 & x^{WE}_2 &= 0 & C\pa{x^{WE}} &= 1
+  \end{align*}
+  che coincide con la soluzione calcolata dall'equilibrio di Nash nel
+  caso discretizzato.
+\end{myes}
 
 \section{Instradamento parzialmente ottimo}
 
