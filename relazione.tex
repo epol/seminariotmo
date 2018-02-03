@@ -930,6 +930,111 @@ migliorato facendolo passare a $0$.
 
 \section{Instradamento parzialmente ottimo}
 
+\subsection{Modello e soluzione}
+\label{sec:por-modello}
+
+Vogliamo analizzare ora reti in cui alcune porzioni sono gestite da
+degli operatori che controllano completamente il traffico al loro
+interno.
+
+Data un'istanza $R\in \mathcal{R}$ supponiamo che ci siano $k$
+sottoreti \textbf{disgiunte} $R_1,...,R_k \subseteq R$ controllate da
+diversi operatori. Ricordiamo che nella definizione
+\ref{def:sottorete} (sottorete) abbiamo supposto che ogni sottorete
+abbia un unico punto di ingresso e un unico punto di uscita.
+
+Per semplicità supponiamo che ci sia un unico operatore e, quindi,
+un'unica sottorete $R_0 \subseteq R$.
+
+Nella souluzione che vogliamo definire l'operatore, avendo il pieno
+controllo della sua sottorete, instraderà in modo ottimo il traffico
+che lo attraversa, il resto della rete continuerà ad utilizzare
+l'equilibrio di Wardrop.
+
+Data $R=(V,A,P,s,t,X,l)$ e $R\supseteq R_0 =(V_0,A_0,P_0,s_0,t_0)$
+consideriamo, al variare di $X_0\in \mathbb{R}^+$, la rete
+\[ R_0\pa{X_0} = \pa{V_0,A_0,P_0,\bra{s_0},\bra{t_0},\bra{X_0},
+    l_{\mid A_0}} \]
+si ha che $R_0\pa{X_0}\in \mathcal{R}$, quindi possiamo calcolarne una
+soluzione socialmente ottima e definire (per $X_0>0$) la quantità
+\[ L_0\pa{X_0} = C\pa{x^{SO}\pa{R_0\pa{X_0}}} \]
+\begin{mydef}[Latenza effettiva]
+  Chiamiamo \textbf{latenza effettiva} di $R_0 \subseteq R$ la
+  funzione
+  \[ l_0\pa{X_0} = \left\{
+      \begin{matrix}
+        \frac{L\pa{X_0}}{X_0} & \text{ per } X_0 > 0 \\
+        \lim _{x\to 0} l_0\pa{x_0} & \text{ per } X_0 = 0
+      \end{matrix}
+    \right. \]
+\end{mydef}
+\begin{mylem}
+\label{lem:l0-regolare}
+  La funzione $l_0$ così definita è continua, non negativa e non
+  decrescente.
+\end{mylem}
+\begin{proof}
+  Dimostriamo la proprietà su $\pa{0,+\infty}$.
+
+  La funzione costo globale $C$ è somma di termini del tipo $x_j
+  l_j(x_j)$ che sono non negativi per definizione di soluzione e di
+  istanza, quindi la funzione $L_0$ è non negativa e di conseguenza è
+  non negativa la funzione $l_0$.
+
+  Osservo che la funzione $C$ ha la seguente proprietà per ogni $x$
+  soluzione e per ogni $\lambda \le 1$:
+  \[ C\pa{\lambda x} = \sum _{j\in A} \lambda x_j l_j\pa{\lambda x_j}
+    = \lambda \sum _{j\in A} l_j\pa{\lambda x_j} \le \lambda \sum
+    _{j\in A} l_j\pa{\lambda x_j} = \lambda C\pa{x} \]
+
+  Siano $a,b\in \pa{0,+\infty}$ tali che $a<b$ e siano $x^a$ e $x^b$
+  delle soluzioni socialmente ottime rispettivamente di $R_0\pa{a}$ e
+  $R_0\pa{b}$. Considero ora il vettore
+  \[ \frac{a}{b} x^b \le x^b \]
+  (dove le operazioni e i confronti vanno intese componente per
+  componente), si vede facilmente che questo vettore è una soluzione
+  di $R_0(a)$, in generale non sarà una soluzione socialmente ottima.
+
+  Si ha:
+  \[ L_0\pa{a} = C\pa{x^a} \le C\pa{\frac{a}{b} x^b} \le \frac{a}{b}
+    C\pa{x^b} = \frac{a}{b}L_0\pa{b} \]
+  quindi:
+  \[ l_0(a) = \frac{L_0(a)}{a} \le \frac{\frac{a}{b} L_0(b)}{a}
+    =\frac{L_0(b)}{b} = l_0(b) \]
+  
+  Data la non decrescenza, per dimostrare la continuità ci basta
+  dimostrare che per ogni $\bar X\in \pa{0,\infty}$ vale
+  $\lim _{X\to \bar X^+} l_0\pa{X} \le l_0\pa{\bar X}$ che equivale a
+  \[ \lim _{\lambda \to 1^+} L_0\pa{\lambda \bar X} \le
+    L_0\pa{\bar X} \] chiamiamo $\bar x$ una soluzione socialmente
+  ottima di $R_0\pa{\bar X}$.
+  
+  Per $\lambda > 1$ il vettore $\lambda \bar x$ è una soluzione (non
+  necessariamente ottima) di $R\pa{\lambda \bar X}$, quindi
+  \[ L_0\pa{\lambda \bar X} \le C\pa{\lambda \bar x} = \sum _{j\in A}
+    \lambda \bar x_j l_j(\lambda \bar x_j) \]
+  passando al limite e ricordando che le funzioni $l_j$ sono continue
+  si ottiene:
+  \[ \lim _{\lambda \to 1^+} L_0\pa{\lambda \bar X} \le \lim _{\lambda
+      \to 1^+} \sum _{j\in A}\lambda \bar x_j l_j\pa{\lambda \bar x_j}
+    = \sum _{j\in A} \bar x_j l_j\pa{\bar x_j} = C\pa{\bar x} =
+    L_0\pa{\bar X} \]
+
+  Abbiamo dimostrato le proprietà su $\pa{0,+\infty}$, il limite per
+  $X_0 \to 0$ è ben definito per la non decrescenza. La continuità e
+  la non negatività sono ovvie per la definizione di $l_0\pa{0}$.
+\end{proof}
+
+\begin{mylem}
+  Sia $R\in \mathcal{R}^{aff}$ è un'istanza e $R_0\subseteq R$ una
+  sottorete, allora la funzione $l_0$ è concava.
+\end{mylem}
+\begin{proof}
+  TODO: \cite[Lemma 3.11]{menache2011network}
+\end{proof}
+
+
+
 \section{Instradamento in presenza di costi fissati dai gestori della rete}
 
 \appendix
