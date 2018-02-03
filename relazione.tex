@@ -665,7 +665,268 @@ definita).
   \end{align*}
   che coincide con la soluzione calcolata dall'equilibrio di Nash nel
   caso discretizzato.
+
+  Osserviamo, infine, che il costo globale della soluzione $x^{WE}$ è
+  maggiore del costo della soluzione socialmente ottima.
 \end{myes}
+
+\subsection{Inefficienza dell'equilibrio di Wardrop}
+\label{sec:wardrop-inefficienza}
+
+\subsubsection{Prezzo dell'anarchia}
+\label{sec:wardrop-poa}
+
+Abbiamo già visto nell'esempio di Pigou che il costo globale della
+soluzione di Wardrop può essere maggiore del costo della soluzione
+ottima, siamo quindi interessati a studiare la quantità
+\[ \frac{C\pa{x^{SO}\pa{R}}}{C\pa{x^{WE}\pa{R}}} \]
+al variare di $R$ in opportuni sottoinsiemi di $\mathcal{R}$. Lo
+studio di questa quantità, in particolare del suo minimo, ci dirà di
+quanto l'equilibrio di Wardrop può peggiorare il costo rispetto alla
+soluzione ottima.
+
+\begin{myteo}[Roughgarden e Tardos{\cite[Teorema
+    4.5]{roughgarden2002}}]
+\label{teo:roughgarden-tardos}
+  \[ \inf _{R\in \mathcal{R}^{conv}} \frac{C\pa{ x^{SO}\pa{R}}}{C\pa{
+        x^{WE}\pa{R}}} = 0 \]
+  \[ \inf _{R\in \mathcal{R}^{aff}} \frac{C\pa{ x^{SO}\pa{R}}}{C\pa{
+        x^{WE}\pa{R}}} = \frac{3}{4} \]
+\end{myteo}
+
+È possibile dimostrare anche una versione più forte del secondo punto
+\begin{myteo}[{\cite[Lemma 3.10]{menache2011network}}]
+\label{teo:poa-we-conc}
+  \[ \inf _{R\in \mathcal{R}^{conc}} \frac{C\pa{ x^{SO}\pa{R}}}{C\pa{
+        x^{WE}\pa{R}}} = \frac{3}{4} \]
+\end{myteo}
+
+Non dimostraiamo quest'ultimo teorema (una dimostrazione si può
+trovare nel testo citato) e dimostriamo solo la prima
+parte del teorema di Roughgarden e Tardos (la seconda è un corollario
+del teorema \ref{teo:poa-we-conc}).
+
+\begin{proof}[Dimostrazione della prima parte del teorema \ref{teo:roughgarden-tardos}]
+  Per dimostrare questa parte del teorema ci basta esibire una
+  successioni di istanze $\pa{R_k}_{k\in \mathbb{N}}$ tali che $R_k\in
+  \mathcal{R}^{conv}$ e
+  \[ \lim _{k\to \infty} \frac{C\pa{ x^{SO}\pa{R_k}}}{C\pa{
+x^{WE}\pa{R_k}}} = 0 \]
+
+  \begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70}]
+      \node[mnode] (1) at (0,0) {s}; 
+      \node[mnode] (2) at (3,0) {t};
+      \draw [->] (1) to [bend left] node[above] {$l_1(x_1) = x_1^k$} (2);
+      \draw [->] (1) to [bend right] node[below] {$l_2(x_2) = 1$} (2);
+      \draw [->,color=red] (-1,0) -- node[above] {1} (1) ;
+      \draw [->,color=red] (2) --  (4,0) ;
+    \end{tikzpicture}
+    \caption{Istanza $R_k$}
+    \label{fig:esempio-conv-poa}
+  \end{figure}
+
+  Sia $R_k$ l'istanza costituita come in figura
+  \ref{fig:esempio-conv-poa} (differisce dall'esempio di Pigou per la
+  funzione $l_1$), come abbiamo già osservato precendentemente ci
+  bastano le variabili $x_1$ e $x_2$ (rispettivamente il traffico sul
+  primo e sul secondo arco) per descrivere l'instradamento (l'insieme
+  degli archi coincide con l'insieme dei percorsi).
+  
+  I vincoli sono:
+  \begin{align*}
+    x_1 &\ge 0 & x_2 &\ge 0 & x_1 + x_2 &= 1
+  \end{align*}
+  le funzioni da minimizzare
+  \begin{align*}
+    f^{SO}(x) &= x_1^{k+1} + x_2 & f^{WE}(x) &= \frac{x_1^{k+1}}{k+1}
+                                              + x_2
+  \end{align*}
+  
+  Senza dover minimizzare $f^{WE}$ si può vedere che nell'equilibrio
+  di Wardrop tutto il traffico viene instradato nel primo link,
+  infatti in qualunque soluzione con $x_2>0$ si avrebbe $x_1<1$ da cui
+  $l_1(x_1) < 1 = l_2(x_2)$ e quindi non potrebbe essere un equilibrio
+  di Wardrop. Quindi:
+  \begin{align*}
+    x^{WE}_1 &= 1 & x^{WE}_2 &= 0 & C\pa{x^{WE}} = 1
+  \end{align*}
+
+  Riscrivendo $f^{SO}$ eliminando $x_2$ (con il terzo vincolo) si ha
+  \[ f^{SO}(x) = x_1^{k+1} - x_1 + 1 \]
+  questa funzione per $x_1\ge 0$ ha un unico punto di minimo in $x_1 =
+  \pa{k+1}^{-1/k}$, la soluzione corrispondente rispetta i vincoli e
+  quindi è la soluzione cercata
+  \begin{align*}
+    x^{SO}_1 &= \pa{k+1}^{-1/k} & x^{SO}_2 &= 1- \pa{k+1}^{-1/k} &
+    C\pa{x^{SO}} &= 1 - \frac{k}{k+1}\pa{k+1}^{-1/k} 
+  \end{align*}
+  
+  Calcolando il limite si vede che la successione si comporta come
+  richiesto:
+  \[ \lim _{k\to \infty} \frac{C\pa{ x^{SO}\pa{R_k}}}{C\pa{
+        x^{WE}\pa{R_k}}} = 1 - \lim _{k\to \infty}
+    \frac{k}{k+1}\pa{k+1}^{-1/k} = 0 \]
+\end{proof}
+
+\subsubsection{Paradosso di Braess}
+\label{sec:paradosso-braess}
+
+Un altro comportamento inefficiente dell'equilibrio di Wardrop è dato
+dall'esempio del paradosso di Braess
+
+\begin{myes}[Paradosso di Braess{\cite[pag. 263]{braess1968}}]
+\label{es:braess}
+  Consideriamo un'istanza come in figura \ref{fig:braess-prima}, qui
+  la disposizione del traffico secondo l'equilibrio di Wardrop
+  coinciderà con la disposizione della soluzione socialmente
+  ottima. Il costo globale di entrambe le soluzioni sarà $3/2$.
+  \begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70}]
+      \node[mnode] (0) at (0,0) {0}; 
+      \node[mnode] (1) at (3,2) {1};
+      \node[mnode] (2) at (3,-2) {2};
+      \node[mnode] (3) at (7,0) {3};
+      \draw [->] (0) to node[below] {x} (1);
+      \draw [->] (0) to node[above] {1} (2);
+      \draw [->] (1) to node[below] {1} (3);
+      \draw [->] (2) to node[above] {x} (3);
+      \draw [->,color=red] (-1,0) -- node[above,color=black] {1} (0) ;
+      \draw [->,color=red] (0) to [bend left] node[above,color=red]{$1/2$} (1);
+      \draw [->,color=red] (0) to [bend right] node[below,color=red]{$1/2$} (2);
+      \draw [->,color=red] (1) to [bend left] node[above,color=red]{$1/2$} (3);
+      \draw [->,color=red] (2) to [bend right] node[below,color=red]{$1/2$} (3);
+      \draw [->,color=red] (3) -- (8,0) ;
+    \end{tikzpicture}
+    \caption{Paradosso di Braess: prima di aggiungere la nuova strada}
+    \label{fig:braess-prima}
+  \end{figure}
+
+  Supponiamo ora di voler ``migliorare'' la rete aggiungendo un nuovo
+  arco tra il nodo 1 e il nodo 2 con costo $0$ (vedi figura
+  \ref{fig:braess-dopo}). Potremmo pensare che, essendo un
+  miglioramento, il costo del nuovo equilibrio debba essere minore o
+  uguale a quello del vecchio equilibrio.
+
+  \begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70}]
+      \node[mnode] (0) at (0,0) {0}; 
+      \node[mnode] (1) at (3,2) {1};
+      \node[mnode] (2) at (3,-2) {2};
+      \node[mnode] (3) at (7,0) {3};
+      \draw [->] (0) to node[below] {x} (1);
+      \draw [->] (0) to node[above] {1} (2);
+      \draw [->] (1) to node[below] {1} (3);
+      \draw [->] (2) to node[above] {x} (3);
+      \draw [->,color=red] (-1,0) -- node[above,color=black] {1} (0) ;
+      \draw [->,color=white] (0) to [bend left] node[below,color=blue]{$1/2$} (1);
+      \draw [->,color=white] (0) to [bend right] node[above,color=blue]{$1/2$} (2);
+      \draw [->,color=white] (1) to [bend left] node[below,color=blue]{$1/2$} (3);
+      \draw [->,color=white] (2) to [bend right] node[above,color=blue]{$1/2$} (3);
+      \draw [->] (1) to node[left] {0} (2);
+      \draw [->,color=red,line width=1.5pt] (1) to [bend left] node[right,color=red]
+      {1} (2);
+      \draw [->,color=red,line width=1.5pt] (0) to [bend left] node[above]{$1$} (1);
+      \draw [->,color=red,line width=1.5pt] (2) to [bend right] node[below]{$1$} (3);
+      \draw [->,color=red,line width=1.5pt] (-1,0) -- (0) ;
+      \draw [->,color=red,line width=1.5pt] (3) -- (8,0) ;
+    \end{tikzpicture}
+
+    \caption{Paradosso di Braess: dopo aver aggiunto la nuova strada,
+      in rosso il traffico dell'equilibrio di Wardrop, in blu quello
+      della soluzione ottima}
+    \label{fig:braess-dopo}
+  \end{figure}
+
+  In effetti la soluzione ottima non è modificata (quindi il costo non
+  peggiora), ma calcolando l'equilibrio di Wardrop si vede che tutto
+  il traffico segue il percorso 0 -- 1 -- 2 -- 3 e il costo globale
+  diventa $2$.
+\end{myes}
+
+Come abbiamo visto nell'esempio, migliorare la qualità dei
+collegamenti di una rete potrebbe peggiorare il costo incontrato dagli
+utenti. Vogliamo definire in modo più formale questa situazione, per
+farlo ci serve prima la definizione di sottorete.
+
+\begin{mydef}[Sottorete]
+\label{def:sottorete}
+  Data un'istanza $R=(V,A,P,s,t,X,l)$ diciamo che
+  $R_0=(V_0,A_0,P_0,s_0,t_0)$ è una \textbf{sottorete} di $R$ se:
+  \begin{enumerate}
+  \item $V_0 \subseteq V$ e $A_0 = A \cap \pa{V_0\times V_0}$,
+  \item esistono due nodi $s_0,t_0\in V$ tali che tutti i percorsi di
+    $P$ passanti per $\pa{V_0,A_0}$ contengono un percorso in $P_0$ da
+    $s_0$ in $t_0$ sugl'archi di $A_0$.
+  \end{enumerate}
+  Scriviamo $R_0\subseteq R$.
+\end{mydef}
+
+Osserviamo che la seconda richiesta della definizione fa sì che la
+rete abbia un unico punto di accesso e un unico punti di uscita,
+questo significa che ogni percorso passante per gli archi di $R_0$
+deve entrare in $R_0$ attraverso $s_0$ e uscire tramite $t_0$. Ci
+stiamo quindi restringendo a sottoreti \textbf{con un unico punto di
+  ingresso e un unico punto di uscita}.
+
+\begin{figure}[ht]
+  \centering
+      \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70},rnode/.style={circle,fill=green!50,minimum size=0.65cm}]
+      \node[mnode] (0) at (0,0) {$s$};
+      \node[mnode] (1) at (2,0) {};
+      \node[mnode] (2) at (3.7,-1) {};
+      \node[mnode] (3) at (6,0) {$t$};
+      \node[rnode] (4) at (2,-2) {$s_0$};
+      \node[rnode] (5) at (5,-2) {$t_0$};
+      \node[rnode] (6) at (3,-3) {};
+      \node[rnode] (7) at (4,-3) {};
+      \draw [->] (0) to (1);
+      \draw [->] (1) to (2);
+      \draw [->] (2) to (3);
+      \draw [->] (1) to (3);
+      \draw [->] (0) to (4);
+      \draw [->] (2) to (3);
+      \draw [->] (1) to (4);
+      \draw [->] (5) to (3);
+      \draw [->] (4) to (2);
+      \draw [->] (2) to (5);
+      \draw [->,color=green] (4) to (5);
+      \draw [->,color=green] (4) to (6);
+      \draw [->,color=green] (6) to (7);
+      \draw [->,color=green] (7) to (5);
+      \draw [->,color=green] (6) to (5);
+      \draw [->,color=red] (-1,0) -- (0) ;
+      \draw [->,color=red] (3) -- (7,0) ;
+    \end{tikzpicture}
+  \caption{Esempio di sottorete: i nodi e gli archi verdi
+    rappresentano la sottorete.}
+  \label{fig:sottorete}
+\end{figure}
+
+Siamo ora pronti a definire cos'è un paradosso di Braess.
+\begin{mydef}[Paradosso di Braess]
+  Data una rete $R=(V,A,P,s,t,X,l)$ e una sua sottorete
+  $R_0=(V_0,A_0,P_0,s_0,t_0)$ diciamo che esiste un
+  \textbf{paradosso di Braess} in $R$ centrato in $R_0$ se esiste
+  un'altra istanza nella forma $R_m=(V,A,P,s,t,X,m)$ tale che:
+  \begin{enumerate}
+    \begin{minipage}{1.0\linewidth}
+    \item $\forall j\in A$ e $\forall x_j \ge0$
+      \begin{itemize}
+      \item $j \in A_0 \longrightarrow m_j(x_j) \le l_j(x_j)$,
+      \item $j \not\in A_0\longrightarrow m_j(x_j) = l_j(x_j)$;
+      \end{itemize}
+    \end{minipage}
+  \item $C\pa{x^{WE}\pa{R_m}} > C\pa{x^{WE}\pa{R}}$.
+  \end{enumerate}
+\end{mydef}
+
+Nell'esempio \ref{es:braess} la sottorete in cui esiste il paradosso è
+l'arco $1 -- 2$ che inizialemente ha costo $+\infty$ e poi viene
+migliorato facendolo passare a $0$.
 
 \section{Instradamento parzialmente ottimo}
 
@@ -680,6 +941,6 @@ definita).
 
 \bibliographystyle{alpha}
 
-\bibliography{menache2011network,wardrop1952,haurie1985}
+\bibliography{menache2011network,wardrop1952,haurie1985,roughgarden2002,braess1968}
 
 \end{document}
