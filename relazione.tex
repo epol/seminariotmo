@@ -678,7 +678,8 @@ definita).
 
 Abbiamo già visto nell'esempio di Pigou che il costo globale della
 soluzione di Wardrop può essere maggiore del costo della soluzione
-ottima, siamo quindi interessati a studiare la quantità
+ottima, siamo quindi interessati a studiare la quantità (che
+chiameremo \textit{prezzo dell'anarchia})
 \[ \frac{C\pa{x^{SO}\pa{R}}}{C\pa{x^{WE}\pa{R}}} \]
 al variare di $R$ in opportuni sottoinsiemi di $\mathcal{R}$. Lo
 studio di questa quantità, in particolare del suo minimo, ci dirà di
@@ -946,7 +947,7 @@ abbia un unico punto di ingresso e un unico punto di uscita.
 Per semplicità supponiamo che ci sia un unico operatore e, quindi,
 un'unica sottorete $R_0 \subseteq R$.
 
-Nella souluzione che vogliamo definire l'operatore, avendo il pieno
+Nella soluzione che vogliamo definire l'operatore, avendo il pieno
 controllo della sua sottorete, instraderà in modo ottimo il traffico
 che lo attraversa, il resto della rete continuerà ad utilizzare
 l'equilibrio di Wardrop.
@@ -1026,11 +1027,295 @@ soluzione socialmente ottima e definire (per $X_0>0$) la quantità
 \end{proof}
 
 \begin{mylem}
+\label{lem:l0-concava}
   Sia $R\in \mathcal{R}^{aff}$ è un'istanza e $R_0\subseteq R$ una
   sottorete, allora la funzione $l_0$ è concava.
 \end{mylem}
 \begin{proof}
   TODO: \cite[Lemma 3.11]{menache2011network}
+
+  Per ipotesi per ogni $j\in A_0$ possiamo scrivere $l_j\pa{x_j} = a_j
+  x_j + b_j$ con $a_j\ge 0$ (per la non decrescenza) e $b_j \ge 0$
+  (per la non negatività). Scriviamo il problema della soluzione
+  ottima:
+  \begin{align*}
+    l_0(X_0) = & \min _{x_p \ge 0, p\in P_0}  \sum _{j\in A_0} \pa{
+                 \frac{a_j x_j ^2}{X_0} + \frac{b_j x_j}{X_0}} \\
+    \text{tale che } & \sum _{p\in P_0, p\ni j} x_p = x_j & \forall j\in A_0
+    \\
+    & \sum _{p\in P_0} x_p = X_0
+  \end{align*}
+
+  Sostituiamo $y_p = \frac{x_p}{X_0}$ e $y_j = \frac{x_j}{X_0}$,
+  otteniamo il seguente problema:
+  \begin{align*}
+    l_0(X_0) = & \min _{y_p \ge 0, p\in P_0}  \sum _{j\in A_0} \pa{
+                 a_j X_0 y_j ^2 + b_j y_j} \\
+    \text{tale che } & \sum _{p\in P_0, p\ni j} y_p = y_j & \forall j\in A_0
+    \\
+    & \sum _{p\in P_0} y_p = 1
+  \end{align*}
+  definiamo quindi la regione $Y$ come:
+  \[ Y = \set { y \mid y_p \ge 0\; \forall p \in P_0, \; \sum _{p\in
+        P_0} = 1 } \]
+  abbiamo così
+  \[ l_0\pa{X_0} = \inf _{y\in Y} \bra{ \pa{ \sum _{j\in A_0} a_j
+        y_j^2} X_0 + \pa { \sum _{j\in A_0} b_j y_j} } \]
+  cioè la funzione $l_0$ è l'estremo inferiore di una famiglia di
+  funzioni affini, quindi è concava.
+\end{proof}
+
+Definiamo ora una nuova istanza $R'$ ricavata da $R$ sostituendo alla
+sottorete $R_0$ un unico arco con costo uguale alla latenza effettiva
+di $l_0$, formalmente stiamo definendo $R'=(V',A',P',s,t,X,l')$ con:
+\begin{itemize}
+\item $V' = \pa{V\setminus V_0}\cup \set{s_0,t_0}$,
+\item $A' = \pa{A\setminus A_0}\cup \set{\pa{s_0,t_0}}$,
+\item $P'$ i percorsi di $P$ con $\pa{s_0,t_0}$ al posto dei
+  percorsi in $P_0$,
+\item Per $j\in A\setminus A_0$ definiamo $l'_j = l_j$
+\item $l'_{\pa{s_0,t_0}} = l_0$.
+\end{itemize}
+
+\begin{mydef}[Instradamento parzialmente ottimo]
+  Data un'istanza $R$ e una sua sottrete $R_0$ una soluzione $x$ di
+  $R$ è un \textbf{instradamento parzialmente ottimo} se su
+  $A\setminus A_0$ coincide con $x^{WE}(R')$, indichiamo tale
+  soluzione con
+  \[ x^{POR}(R,R_0) \]
+\end{mydef}
+
+Non abbiamo definito la soluzione sugl'archi di $R_0$, per farlo ci
+basta calcolare una soluzione socialmente ottima per $R_0\pa{x_0}$
+dove $x_0$ è il flusso sull'arco $\pa{s_0,t_0}$ in $R'$.
+
+Come al solito, la scrittura $x^{POR}\pa{R,R_0}$ non è ben definita
+perché la soluzione al problema potrebbe non essere unica. È comunque
+ben definita la quantità $C\pa{x^{POR}\pa{R,R_0}}$.
+
+All'inizio della sezione abbiamo supposto di avere un unico operatore.
+La definizione si può facilmente esterndere al caso in cui sono
+presenti più operatori (ognuno dei quali gestisce una sua sottorete
+che non si intereseca con le altre) semplicemente sostituendo ad ogni
+sottorete la sua latenza effettiva.
+
+Continuiamo a mantenere, per semplicità, l'ipotesi di avere un unico
+operatore, ma tutti i risultati che mostriamo ora si possono estendere
+al caso di più operatori.
+
+\subsection{Inefficienza dell'instradamento parzialmente ottimo}
+\label{sec:inefficienza-por}
+
+\subsubsection{Paradosso POR}
+\label{sec:paradosso-por}
+
+Calcolando la soluzione parzialmente ottima potremmo aspettarci che
+avendo migliorato l'instradamento in una porzione della rete il costo
+globale non possa aumentare. Invece questo può accadere, come in
+effetti accade nel prossimo esempio.
+
+\begin{myes}
+  Consideriamo l'istanza $R$ di figura \ref{fig:paradosso-por} e
+  scegliamo come sottorete gli archi colorati in blu (quindi i nodi 1
+  e 2 e gli archi che li congiungono).
+
+  \begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70}]
+      \node[mnode] (0) at (0,0) {0}; 
+      \node[mnode] (1) at (4,2) {1};
+      \node[mnode] (2) at (4,-2) {2};
+      \node[mnode] (3) at (8,0) {3};
+      \draw [->] (0) to node[above] {$x$} (1);
+      \draw [->] (0) to node[below] {$1.25$} (2);
+      \draw [->] (1) to node[above] {$3.25$} (3);
+      \draw [->] (2) to node[below] {$3x$} (3);
+      \draw [->,blue] (1) to [bend right] node[left] {$l_5(x) = 0.31$} (2);
+      \draw [->,blue] (1) to [bend left] node[right] {$l_6(x) = 0.4x$} (2);
+      \draw [->,color=red] (-1,0) -- node[above,color=black] {$1$} (0) ;
+      \draw [->,color=red] (3) -- (9,0) ;
+      \draw [dashed,->] (1) to node {$l_0(X_0)$}(2) ;
+    \end{tikzpicture}
+    \caption{Esempio in cui accade un paradosso POR}
+    \label{fig:paradosso-por}
+  \end{figure}
+
+  Come prima cosa calcoliamo un equilibrio di Wardrop per l'intera
+  rete (ignorando, quindi, la presenza del provider), la soluzione che
+  si ottiene ha costo globale
+  \[ C\pa{x^{WE}\pa{R}} = 4.19 \]
+  
+  Calcoliamo ora una soluzione parzialmente ottima di $R$, per farlo
+  dobbiamo prima calcolare la latenza effettiva di $R_0$
+  \[ l_0\pa{X_0} = \left\{
+      \begin{matrix}
+        0.4 X_0 & \text{ se } 0 \le X_0 < 0.3875 \\
+        0.31 - \frac{0.0961}{1.6X_0} & \text{ se } X_0 \ge 0.3874
+      \end{matrix} \right.
+  \]
+  a questo punto possiamo calcolare la soluzione POR ottenendo un
+  costo globale $C\pa{x^{POR}\pa{R,R_0}} = 4.25$ che è strattamente
+  maggiore del costo della soluzione POR.
+
+  Osserviamo che se avessimo calcolato anche una latenza effettiva
+  ``di Wardrop'' (cioè calcolando un equilibrio di Wardrop all'interno
+  di $R_0$) la soluzione globale ottenuta utilizzando questa latenza
+  effettiva coinciderebbe con $x^{WE}\pa{R}$. Questa funzione è:
+  \[ \tilde l _0 \pa{X_0} = \min\set{0.31, 0.4X_0} \]
+  che è sempre minore o uguale di $l_0\pa{X_0}$.
+
+  Quindi possiamo dire che esiste un paradosso di Braess in $R'$
+  centrato nell'arco $\pa{s_0,t_0}$.
+\end{myes}
+
+Il precedente esempio, oltre a mostrarci un caso in cui la soluzione
+POR è socialmente peggiore della soluzione di Wardrop, ci suggerisce
+un possibile collegamento tra questo tipo di comportamento e il
+fenomeno del paradosso di Braess.
+
+\begin{mydef}[POR paradox]
+  Data un'istanza $R$ e una sua sottorete $R_0 \subseteq R$ diciamo
+  che abbiamo un \textbf{partially optimal routing paradox} in $R$
+  centrato in $R_0$ se 
+  \[ C\pa{ x^{POR} (R,R_0)} > C\pa{ x^{WE} (R)} \]
+\end{mydef}
+
+\begin{myteo}[Paradosso POR come paradosso di Braess]
+  Se una rete $R$ ha un \textbf{paradosso POR} centrato in
+  $R_0\subseteq R$ allora esiste un \textbf{paradosso di Braess} in
+  $R$ centrato in $R_0$.
+\end{myteo}
+
+Non dimostriamo questo teorema (la dimostrazione si può trovare in
+\cite[Proposizione 1]{acemoglu2007}) ma mostriamo un importante
+corollario:
+\begin{mycor}
+  Data un'istanza $R$, se non ci sono paradossi di Braess in $R$
+  allora la soluzione POR rispetto a qualsiasi sottorete
+  $R_0 \subseteq R$ \textbf{non peggiora} il costo globale.
+\end{mycor}
+
+Questo corollario ci dà un criterio per capire quando possiamo
+introdurre l'instradamento parzialmente ottimo senza rischiare di
+peggiorare la qualità del servizio globale.
+
+\subsubsection{Prezzo dell'anarchia per POR}
+\label{sec:poa-por}
+
+Analogamente a quanto abbiamo fatto per l'equilibrio di Wardrop,
+vogliamo analizzare per opportuni $\mathcal{R}' \subseteq \mathcal{R}$
+la quantità
+\[ \inf _{R \in \mathcal{R}', R_0 \subseteq R}
+  \frac{C\pa{x^{SO}\pa{R}}}{C\pa{x^{POR}\pa{R,R_0}}} \]
+
+Un primo risultato di confronto con l'instradamento di Wardrop è dato
+dalla prossima proposizione.
+\begin{mypro}
+Vale:
+  \begin{enumerate}
+    % \item $\forall \mathcal{R}' \in \set{\mathcal{R}^{conv},
+    %   \mathcal{R}^{aff}, \mathcal{R}^{conc}}$ si ha
+  \item $\forall \mathcal{R}' \subseteq \mathcal{R}$
+    \[ \inf _{\small\begin{matrix}R\in \mathcal{R}'\\R_0\subseteq
+          R\end{matrix}}
+      \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \le
+      \inf _{R\in \mathcal{R}'}
+      \frac{C\pa{x^{SO}(R)}}{C\pa{x^{WE}(R)}}
+    \]
+  \item
+    \[ \inf _{\small\begin{matrix}R\in \mathcal{R}\\R_0\subseteq
+          R\end{matrix}}
+      \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} =
+      \inf _{R\in \mathcal{R}}
+      \frac{C\pa{x^{SO}(R)}}{C\pa{x^{WE}(R)}}
+    \]
+  \item
+    \[ \inf _{\small\begin{matrix}R\in \mathcal{R}^{aff}\\R_0\subseteq
+          R\end{matrix}}
+      \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \ge
+      \inf _{R\in \mathcal{R}^{conc}}
+      \frac{C\pa{x^{SO}(R)}}{C\pa{x^{WE}(R)}}
+    \]
+  \end{enumerate}
+\end{mypro}
+\begin{proof}
+  \begin{enumerate}
+  \item Comunque scegliamo un'istanza $R\in \mathcal{R'}$ possiamo
+    costruire una sottorete ``banale'' di $R$ scegliendo un unico
+    arco, la soluzione parzialmente ottima ottenuta con questa scelta
+    avrà costo globale uguale a quello della soluzione di Wardrop,
+    quindi
+    \[ \inf _{R_0\subseteq R}
+      \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \le
+      \frac{C\pa{x^{SO}(R)}}{C\pa{x^{WE}(R)}} \]
+    prendendo l'estremo inferiore su $R\in \mathcal{R}'$ si ha la
+    tesi.
+  \item Il punto precedente applicato a $\mathcal{R'} =\mathcal{R}$ ci
+    dà una disuguaglianza, per dimostrare l'altro verso costruiamo per
+    ogni $R\in \mathcal{R}$ e $R_0\subseteq R$ l'istanza $R'$ che
+    abbiamo utilizzato per calcolare la soluzione POR, allora per
+    definizione si ha
+    \[ C\pa{x^{WE}\pa{R'}} = C\pa{x^{POR}\pa{R,R_0}} \]
+    e si può dimostrara che
+    \[ C\pa{x^{SO}\pa{R'}} = C\pa{x^{SO}\pa{R}} \]
+    da cui la disuguaglianza cercata passando all'estremo inferiore.
+  \item In modo analogo al punto precedente, data un'istanza $R\in
+    \mathcal{R}^{aff}$ e una sua sottrete $R_0\subseteq R$ costruiamo
+    l'istanza $R'$; osserviamo che le funzioni costo di $R'$ sono
+    tutte affini tranne che per la funzione $l_0$ che abbiamo
+    dimostrato nel lemma \ref{lem:l0-concava} essere concava, quindi
+    $R'\in \mathcal{R}^{conc}$. Ora possiamo concludere come nel punto
+    precedente.
+  \end{enumerate}
+\end{proof}
+
+Possiamo ora enunciare e dimostrare un teorema analogo al teorema di
+Roughgardend e Tardos.
+\begin{myteo}
+\label{teo:poa-por}
+  \[ \inf _{\small\begin{matrix}R\in \mathcal{R}^{conv}\\R_0\subseteq
+        R\end{matrix}}
+    \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} = 0\]    
+  \[ \inf _{\small\begin{matrix}R\in \mathcal{R}^{aff}\\R_0\subseteq
+        R\end{matrix}}
+    \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} = \frac{3}{4} \]    
+\end{myteo}
+\begin{proof}
+  Dal teorema di Roughgarden and Tardos (teorema
+  \ref{teo:roughgarden-tardos}) sappiamo che 
+  \[ \inf _{R\in \mathcal{R}^{conv}} \frac{C\pa{ x^{SO}(R)}}{C\pa{
+        x^{WE}(R)}} = 0 \]
+  mentre dal primo punto della propozione precendente abbiamo
+  \[ \inf _{\small\begin{matrix}R\in \mathcal{R}^{conv}\\R_0\subseteq
+        R\end{matrix}}
+    \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \le
+    \inf _{R\in \mathcal{R}^{conv}}
+    \frac{C\pa{x^{SO}(R)}}{C\pa{x^{WE}(R)}}
+  \]
+  da cui la prima parte dell'enunciato
+  \[ \inf _{\small\begin{matrix}R\in \mathcal{R}^{conv}\\R_0\subseteq
+        R\end{matrix}}
+    \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} = 0\]    
+  
+  Per la seconda parte richiamiamo il teorema sull'efficienza
+  dell'equilibrio di Wardrop per funzioni concave (teorema
+  \ref{teo:poa-we-conc}) che ci dice che:
+  \[ \inf _{R\in \mathcal{R}^{conc}} \frac{C\pa{ x^{SO}(R)}}{C\pa{
+        x^{WE}(R)}} = \frac{3}{4} \]
+  mentre il terzo punto della proposizione precedente ci dice che
+  \[ \inf _{\small\begin{matrix}R\in \mathcal{R}^{aff}\\R_0\subseteq
+        R\end{matrix}}
+    \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \ge
+    \inf _{R\in \mathcal{R}^{conc}}
+    \frac{C\pa{x^{SO}(R)}}{C\pa{x^{WE}(R)}}
+  \]
+  quindi
+  \[ \inf _{\small\begin{matrix}R\in \mathcal{R}^{aff}\\R_0\subseteq
+        R\end{matrix}}
+    \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \ge \frac{3}{4} \]    
+  applicando il primo punto della proposizone con $\mathcal{R}' =
+  \mathcal{R}^{aff}$ e utilizzando il teorema di Roughgarden and
+  Tardos per funzioni affini abbiamo la tesi.
 \end{proof}
 
 
@@ -1046,6 +1331,6 @@ soluzione socialmente ottima e definire (per $X_0>0$) la quantità
 
 \bibliographystyle{alpha}
 
-\bibliography{menache2011network,wardrop1952,haurie1985,roughgarden2002,braess1968}
+\bibliography{menache2011network,wardrop1952,haurie1985,roughgarden2002,braess1968,acemoglu2007}
 
 \end{document}
