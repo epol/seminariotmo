@@ -28,31 +28,56 @@
 
 % \setlength{\parindent}{0in}
 
-\newcounter{counter1}
+% \newcounter{counter1}
+
+% \theoremstyle{plain}
+% \newtheorem{myteo}[counter1]{Teorema}
+% \newtheorem{mylem}[counter1]{Lemma}
+% \newtheorem{mypro}[counter1]{Proposizione}
+% \newtheorem{mycor}[counter1]{Corollario}
+% \newtheorem*{myteo*}{Teorema}
+% \newtheorem*{mylem*}{Lemma}
+% \newtheorem*{mypro*}{Proposizione}
+% \newtheorem*{mycor*}{Corollario}
+
+% \theoremstyle{definition}
+% \newtheorem{mydef}[counter1]{Definizione}
+% \newtheorem{myes}[counter1]{Esempio}
+% \newtheorem{myex}[counter1]{Esercizio}
+% \newtheorem*{mydef*}{Definizione}
+% \newtheorem*{myes*}{Esempio}
+% \newtheorem*{myex*}{Esercizio}
+
+% \theoremstyle{remark}
+% \newtheorem{mynot}[counter1]{Nota}
+% \newtheorem{myoss}[counter1]{Osservazione}
+% \newtheorem*{mynot*}{Nota}
+% \newtheorem*{myoss*}{Osservazione}
 
 \theoremstyle{plain}
-\newtheorem{myteo}[counter1]{Teorema}
-\newtheorem{mylem}[counter1]{Lemma}
-\newtheorem{mypro}[counter1]{Proposizione}
-\newtheorem{mycor}[counter1]{Corollario}
+\newtheorem{myteo}{Teorema}[section]
+\newtheorem{mylem}[myteo]{Lemma}
+\newtheorem{mypro}[myteo]{Proposizione}
+\newtheorem{mycor}[myteo]{Corollario}
 \newtheorem*{myteo*}{Teorema}
 \newtheorem*{mylem*}{Lemma}
 \newtheorem*{mypro*}{Proposizione}
 \newtheorem*{mycor*}{Corollario}
 
 \theoremstyle{definition}
-\newtheorem{mydef}[counter1]{Definizione}
-\newtheorem{myes}[counter1]{Esempio}
-\newtheorem{myex}[counter1]{Esercizio}
+\newtheorem{mydef}[myteo]{Definizione}
+\newtheorem{myes}[myteo]{Esempio}
+\newtheorem{myex}[myteo]{Esercizio}
 \newtheorem*{mydef*}{Definizione}
 \newtheorem*{myes*}{Esempio}
 \newtheorem*{myex*}{Esercizio}
 
 \theoremstyle{remark}
-\newtheorem{mynot}[counter1]{Nota}
-\newtheorem{myoss}[counter1]{Osservazione}
+\newtheorem{mynot}[myteo]{Nota}
+\newtheorem{myoss}[myteo]{Osservazione}
 \newtheorem*{mynot*}{Nota}
 \newtheorem*{myoss*}{Osservazione}
+
 
 \newcommand{\obar}[1]{\overline{#1}}
 \newcommand{\ubar}[1]{\underline{#1}}
@@ -93,7 +118,7 @@
 
 \section{Introduzione ed esempi}
 
-Nello studio dei trasporti e delle reti di telecomunicazioni è
+Nello studio dei trasporti e delle reti di telecomunicazione è
 importante riuscire a prevedere il comportamento degli utenti e la
 distribuzione del loro traffico in funzione dello stato della rete e
 delle decisioni prese dai gestori della rete.
@@ -102,7 +127,7 @@ Tra i molti esempi di reti a cui potrebbe adattarsi il nostro modello
 ne citiamo due molto diffusi: la \textbf{rete stradale} e la
 \textbf{rete internet}. L'esperienza ci dice che non tutte le strade
 che congiungono due località sono equivalenti: strade diverse potranno
-avere tempi di percorrenza diversi (che potranno dipendere dal
+avere tempi di percorrenza diversi (che potranno anche dipendere dal
 traffico presente). Per questo ci servirà introdurre dei costi che,
 nei nostri due esempi, si tradurranno in tempi di percorrenza (detti
 anche \textit{latenze} nell'ambito della rete internet).
@@ -125,10 +150,10 @@ Modellizziamo le nostre reti come grafi diretti dove per ogni arco è
 data una funzione costo in funzione del traffico che attraversa l'arco
 stesso (il costo è quindi una funzione ``locale'').
 
-Supponiamo che le funzioni costo siano continue, non negative e non
-decrescenti. Quest'ultima ipotesi sulla monotonia può essere
-giustificata dall'idea che le prestazioni di una strada (o un
-collegamento) diminuiscono con l'aumentare del traffico.
+Supponiamo che le funzioni costo siano \textbf{continue}, \textbf{non
+  negative} e \textbf{non decrescenti}. Quest'ultima ipotesi sulla
+monotonia può essere giustificata dall'idea che le prestazioni di una
+strada (o un collegamento) diminuiscono con l'aumentare del traffico.
 
 Dato il traffico che deve attraversare la nostra rete, lo dividiamo in
 base alle coppie ``sorgente-destinazione'' e indicizziamo queste
@@ -138,7 +163,7 @@ delle quantità di traffico da instradare.
 
 Supponiamo tutto il traffico \textbf{infinitamente divisibile}, cioè
 possiamo dividerlo sulle nostre strade in rapporti arbitrari. Questo
-confligge con la realtà delle reti stradali e internet in cui il
+non è coerente con la realtà delle reti stradali e internet in cui il
 traffico è discreto, ma ne descrive bene il comportamento quando la
 quantità di utenti è sufficientemente grande.
 
@@ -146,7 +171,8 @@ Infine supponiamo che ci venga fornito per ogni coppia
 ``sorgente-destinazione'' l'insieme dei percorsi non contenenti cicli
 che le congiungono. Questo ci permette di non dover trattare la
 costruzione di questi insiemi (che comunque è un problema
-semplice\footnote{\url{https://xlinux.nist.gov/dads/HTML/allSimplePaths.html}}
+semplice\footnote{Si veda, ad esempio,
+  \url{https://xlinux.nist.gov/dads/HTML/allSimplePaths.html}}).
 
 In figura \ref{fig:esempio-rete} si vede un esempio di rete.
 
@@ -188,10 +214,10 @@ In figura \ref{fig:esempio-rete} si vede un esempio di rete.
   \label{fig:esempio-rete}
 \end{figure}
 
-Formalizzando quanto appena detto, un'instanza del nostro problema è
+Formalizzando quanto appena detto, un'istanza del nostro problema è
 data dalla seguente definizione:
 
-\begin{mydef}[Instanza di instradamento]
+\begin{mydef}[Istanza di instradamento]
   Un'\textbf{istanza di instradamento} (\textit{routing instance} o
   più brevemente \textbf{rete}) è $R=(V,A,P,s,t,X,l)$ con:
   \begin{itemize}
@@ -223,7 +249,7 @@ traffico su ogni percorso.
 Questi due vettori (che esprimiamo come un unico vettore $x$)
 descrivono un possibile schema se soddisfano la definzione di soluzione:
 
-\begin{mydef}[Soluzione di un'instanza]
+\begin{mydef}[Soluzione di un'istanza]
   Data un'istanza $R=(V,A,P,s,t,X,l)$ un vettore
   $x = \bra{x_j}_{j\in A} \cup \bra{x_p}_{p\in P}$ è \textbf{soluzione} se:
   \begin{itemize}
@@ -236,8 +262,10 @@ descrivono un possibile schema se soddisfano la definzione di soluzione:
 \end{mydef}
 
 Dato un percorso $p\in P$ e una soluzione $x$ possiamo scrivere il
-costo pagato dagl'utenti instradati su quel percorso come:
-\[ c_p\pa{x} = \sum _{j\in p} l_j\pa{x_j} \]
+costo pagato dagl'utenti instradati su quel percorso
+come\footnote{Osserviamo che $l_p$ non dipende solo da $x_p$ ma da
+  tutto il vettore $x$}:
+\[ l_p\pa{x} = \sum _{j\in p} l_j\pa{x_j} \]
 sommando il costo pagato su ogni percorso pesato sulla quantit\`a di
 traffico di quel percorso otteniamo
 \[ \sum _{p\in P} \pa{ x_p \sum _{j\in p} l_j\pa{x_j}}  = \sum _{j\in
@@ -294,7 +322,7 @@ seguente problema di minimizzazione:
 \end{proof}
 
 \begin{myteo}[Esistenza dell'instradamento ottimo]
-  Data un'instanza $R$ esiste sempre almeno un instradamento ottimo.
+  Data un'istanza $R$ esiste sempre almeno un instradamento ottimo.
 \end{myteo}
 \begin{proof}
   La funzione costo \`e somma di prodotto di funzioni continue, quindi
@@ -326,7 +354,8 @@ ben definito, \`e ben definita la quantit\`a $C\pa{x^{SO}\pa{R}}$.
 
 \begin{myes}[Esempio di Pigou]
   \label{es:esempio-pigou}
-  Vediamo l'esempio di Pigou in Figura \ref{fig:esempio-pigou}
+  Vediamo l'esempio di Pigou in Figura \ref{fig:esempio-pigou}.
+
   \begin{figure}[ht]
     \centering
     \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70}]
@@ -341,6 +370,7 @@ ben definito, \`e ben definita la quantit\`a $C\pa{x^{SO}\pa{R}}$.
     \caption{Esempio di Pigou}
     \label{fig:esempio-pigou}
   \end{figure}
+  
   Qui l'insieme dei percorsi coincide con l'insieme degl'archi, quindi
   possiamo usare solo un vettore di variabili $\bra{x_1, x_2}$.
 
@@ -435,15 +465,15 @@ sorgente e un'unica destinazione.
   \end{table}
 
   Si vede facilmente che per entrambi i giocatori scegliere
-  \textit{Link 1} è una strategia dominante, quindi diciamo che la
-  nuova soluzione è:
+  \textit{Link 1} è una \textbf{strategia dominante}, quindi diciamo
+  che la nuova soluzione è:
   \begin{align*}
     x^{N}_1 &= 1 & x^{N}_2 &= 0
   \end{align*}
   con un costo globale $C\pa{x^{N}} = 1$.
 \end{myes}
 
-Data un'instanza $R$ e una sua discretizzazione $R_n$, avremo
+Data un'istanza $R$ e una sua discretizzazione $R_n$, avremo
 l'insieme dei giocatori $\mathcal{I} = \set{1,...,n}$ rappresentante
 le singole unità di traffico con peso $m$, per ogni giocatore
 l'insieme delle strategie disponibili è l'insieme $P$ dei percorsi e
@@ -485,15 +515,16 @@ osservando che $x_p > 0 \Leftrightarrow \exists i\in \mathcal{I}:\;
 s^*_i = p$ otteniamo che al limite
 \[ \forall x_p >0, \forall p'\in P \;\;\; \sum _{j\in p}l_j\pa{x^*_j}
   \le \sum _{j\in p'}l_j\pa{x^*_j} \]
-cioè i percorsi scelti sono quelli che minimizzano il tempo di
-percorrenza, inoltre se anche $x_{p'} > 0$ la relazione vale con il
+cioè \textbf{i percorsi scelti sono quelli che minimizzano il tempo di
+  percorrenza}, inoltre se anche $x_{p'} > 0$ la relazione vale con il
 segno di uguaglianza (basta scambiare il ruolo delle variabili).
 
 Questo ci porta al primo criterio proposto da
 Wardrop\cite[pag. 345]{wardrop1952} per determinare la distribuzione
 del traffico: \textit{Il tempo di percorrenza di tutte le strade
-  veramente usate è uguale e più piccolo di quello che impiegherebbe
-  un singolo veicolo a percorrere una strada non utilizzata}
+  veramente usate è uguale, inoltre è più piccolo di quello che
+  impiegherebbe un singolo veicolo a percorrere una strada non
+  utilizzata}
 
 Il ragionamento che abbiamo seguito, oltre a non essere ben
 formalizzato, non tiene in considerazione il problema che l'equilibrio
@@ -508,8 +539,9 @@ ad esempio, il seguente teorema:
   successione di approssimazioni discrete di $R$, se per ogni $n$
   esiste un equilibrio di Nash per $R_n$ e se le funzioni costo $l_j$
   sono strettamente crescenti, allora esiste un'unica soluzione $x$
-  che rispetta il criterio di Wardrop e tale che per ogni sequenza
-  $x_n$ di soluzioni associate ad un equilibrio di Nash si ha
+  che rispetta il criterio di Wardrop\footnote{Cioè soddisfa le
+    richieste della definizione \ref{def:wardrop}} e tale che per ogni
+  sequenza $x_n$ di soluzioni associate ad un equilibrio di Nash si ha
   \[ \lim _{n\to \infty} x_n = x^* \]
 \end{myteo}
 
@@ -520,8 +552,9 @@ Formalizziamo il principio di Wardrop nel caso generale, applicando il
 principio di Wardrop ad ogni coppia sorgente-destinazione otteniamo la
 seguente definizione:
 \begin{mydef}[Equilibrio di Wardrop]
+  \label{def:wardrop}
   Una soluzione $x$ di $R\in \mathcal{R}$ è un \textbf{equilibrio di
-    Wardrop} se per ogni coppia di sorgente-destinazione $(s_i,t_i)$
+    Wardrop} se per ogni coppia sorgente-destinazione $(s_i,t_i)$
   (cioè per ogni $i\in W$) vale:
   \begin{align*}
     \sum _{j\in p'} l_j(x_j) &= \sum _{j\in p} l_j(x_j) & \forall
@@ -571,11 +604,10 @@ definita).
                          & t_i(x) = 0 & \forall i\in W
   \end{align*}
 
-  Abbiamo supposto all'inizio le $l_j$ continue, non negative e non
-  decrescenti, quindi $f$ è una funzione convessa. Inoltre i vincoli
-  sono tutti lineari, quindi (per un teorema visto a lezione) $x$ è
-  punto di minimo se e solo se valgono le condizioni di
-  Karush–Kuhn–Tucker in $x$.
+  Abbiamo supposto all'inizio le $l_j$ non decrescenti, quindi $f$ è
+  una funzione convessa. Inoltre i vincoli sono tutti lineari, quindi
+  (per un teorema visto a lezione) $x$ è punto di minimo se e solo se
+  valgono le condizioni di Karush–Kuhn–Tucker in $x$.
 
   Le KKT in $x$ si scrivono come $\exists \lambda \in \mathbb{R}_+^{\abs{P}}$,
   $\exists \mu \in \mathbb{R}^{\abs{A}}$,
@@ -591,7 +623,7 @@ definita).
                                                       P _i \\
     \lambda _p x_p =0 && \forall p\in P
   \end{align*}
-  la condizione di complementarità può essere riscritta come $x_p > 0
+  la condizione di complementarietà può essere riscritta come $x_p > 0
   \rightarrow \lambda _p =0$, le altre come:
   \begin{align*}
     l_j(x_j) = \mu _j && \forall j\in A \\
@@ -614,7 +646,7 @@ definita).
   strettamente crescenti allora tale equilibrio è unico.
 \end{mycor}
 \begin{proof}
-  Per il teorema precedente il probelema dell'equilibrio di Wardrop è
+  Per il teorema precedente il problema dell'equilibrio di Wardrop è
   equivalente ad un problema di minimizzazione convessa (dove
   l'insieme definito dai vincoli è compatto), quindi esiste sempre una
   soluzione.
@@ -700,7 +732,7 @@ definita).
 Abbiamo già visto nell'esempio di Pigou che il costo globale della
 soluzione di Wardrop può essere maggiore del costo della soluzione
 ottima, siamo quindi interessati a studiare la quantità (che
-chiameremo \textit{prezzo dell'anarchia})
+chiameremo \textbf{prezzo dell'anarchia})
 \[ \frac{C\pa{x^{SO}\pa{R}}}{C\pa{x^{WE}\pa{R}}} \]
 al variare di $R$ in opportuni sottoinsiemi di $\mathcal{R}$. Lo
 studio di questa quantità, in particolare del suo minimo, ci dirà di
@@ -730,7 +762,7 @@ del teorema \ref{teo:poa-we-conc}).
 
 \begin{proof}[Dimostrazione della prima parte del teorema \ref{teo:roughgarden-tardos}]
   Per dimostrare questa parte del teorema ci basta esibire una
-  successioni di istanze $\pa{R_k}_{k\in \mathbb{N}}$ tali che $R_k\in
+  successione di istanze $\pa{R_k}_{k\in \mathbb{N}}$ tali che $R_k\in
   \mathcal{R}^{conv}$ e
   \[ \lim _{k\to \infty} \frac{C\pa{ x^{SO}\pa{R_k}}}{C\pa{
 x^{WE}\pa{R_k}}} = 0 \]
@@ -864,9 +896,9 @@ dall'esempio del paradosso di Braess
   \end{figure}
 
   In effetti la soluzione ottima non è modificata (quindi il costo non
-  peggiora), ma calcolando l'equilibrio di Wardrop si vede che tutto
-  il traffico segue il percorso 0 -- 1 -- 2 -- 3 e il costo globale
-  diventa $2$.
+  è peggiorato), ma calcolando l'equilibrio di Wardrop si vede che
+  tutto il traffico segue il percorso 0 -- 1 -- 2 -- 3 e il costo
+  globale diventa $2$.
 \end{myes}
 
 Come abbiamo visto nell'esempio, migliorare la qualità dei
@@ -888,11 +920,10 @@ farlo ci serve prima la definizione di sottorete.
 \end{mydef}
 
 Osserviamo che la seconda richiesta della definizione fa sì che la
-rete abbia un unico punto di accesso e un unico punti di uscita,
-questo significa che ogni percorso passante per gli archi di $R_0$
-deve entrare in $R_0$ attraverso $s_0$ e uscire tramite $t_0$. Ci
-stiamo quindi restringendo a sottoreti \textbf{con un unico punto di
-  ingresso e un unico punto di uscita}.
+rete abbia \textbf{un unico punto di accesso e un unico punto di
+  uscita}, questo significa che ogni percorso passante per gli archi
+di $R_0$ deve entrare in $R_0$ attraverso $s_0$ e uscire tramite
+$t_0$.
 
 \begin{figure}[ht]
   \centering
@@ -947,7 +978,7 @@ Siamo ora pronti a definire cos'è un paradosso di Braess.
 \end{mydef}
 
 Nell'esempio \ref{es:braess} la sottorete in cui esiste il paradosso è
-l'arco $1 -- 2$ che inizialemente ha costo $+\infty$ e poi viene
+l'arco 1--2 che inizialemente ha costo $+\infty$ e poi viene
 migliorato facendolo passare a $0$.
 
 \section{Instradamento parzialmente ottimo}
@@ -956,8 +987,8 @@ migliorato facendolo passare a $0$.
 \label{sec:por-modello}
 
 Vogliamo analizzare ora reti in cui alcune porzioni sono gestite da
-degli operatori che controllano completamente il traffico al loro
-interno.
+degli operatori che controllano completamente il traffico nella loro
+porzione di rete.
 
 Data un'istanza $R\in \mathcal{R}$ supponiamo che ci siano $k$
 sottoreti \textbf{disgiunte} $R_1,...,R_k \subseteq R$ controllate da
@@ -1007,7 +1038,7 @@ soluzione socialmente ottima e definire (per $X_0>0$) la quantità
   soluzione e per ogni $\lambda \le 1$:
   \[ C\pa{\lambda x} = \sum _{j\in A} \lambda x_j l_j\pa{\lambda x_j}
     = \lambda \sum _{j\in A} l_j\pa{\lambda x_j} \le \lambda \sum
-    _{j\in A} l_j\pa{\lambda x_j} = \lambda C\pa{x} \]
+    _{j\in A} l_j\pa{ x_j} = \lambda C\pa{x} \]
 
   Siano $a,b\in \pa{0,+\infty}$ tali che $a<b$ e siano $x^a$ e $x^b$
   delle soluzioni socialmente ottime rispettivamente di $R_0\pa{a}$ e
@@ -1047,14 +1078,12 @@ soluzione socialmente ottima e definire (per $X_0>0$) la quantità
   la non negatività sono ovvie per la definizione di $l_0\pa{0}$.
 \end{proof}
 
-\begin{mylem}
-\label{lem:l0-concava}
-  Sia $R\in \mathcal{R}^{aff}$ è un'istanza e $R_0\subseteq R$ una
+\begin{mylem}[{\cite[Lemma 3.11]{menache2011network}}]
+  \label{lem:l0-concava}
+  Sia $R\in \mathcal{R}^{aff}$ un'istanza e $R_0\subseteq R$ una
   sottorete, allora la funzione $l_0$ è concava.
 \end{mylem}
 \begin{proof}
-  TODO: \cite[Lemma 3.11]{menache2011network}
-
   Per ipotesi per ogni $j\in A_0$ possiamo scrivere $l_j\pa{x_j} = a_j
   x_j + b_j$ con $a_j\ge 0$ (per la non decrescenza) e $b_j \ge 0$
   (per la non negatività). Scriviamo il problema della soluzione
@@ -1115,7 +1144,7 @@ perché la soluzione al problema potrebbe non essere unica. È comunque
 ben definita la quantità $C\pa{x^{POR}\pa{R,R_0}}$.
 
 All'inizio della sezione abbiamo supposto di avere un unico operatore.
-La definizione si può facilmente esterndere al caso in cui sono
+La definizione si può facilmente estendere al caso in cui sono
 presenti più operatori (ognuno dei quali gestisce una sua sottorete
 che non si intereseca con le altre) semplicemente sostituendo ad ogni
 sottorete la sua latenza effettiva.
@@ -1265,19 +1294,19 @@ Vale:
     costruire una sottorete ``banale'' di $R$ scegliendo un unico
     arco, la soluzione parzialmente ottima ottenuta con questa scelta
     avrà costo globale uguale a quello della soluzione di Wardrop,
-    quindi
+    quindi prendendo l'estremo inferiore su $R_0\subseteq R$:
     \[ \inf _{R_0\subseteq R}
       \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \le
       \frac{C\pa{x^{SO}(R)}}{C\pa{x^{WE}(R)}} \]
-    prendendo l'estremo inferiore su $R\in \mathcal{R}'$ si ha la
-    tesi.
+    prendendo l'estremo inferiore su anche $R\in \mathcal{R}'$ si ha
+    la tesi.
   \item Il punto precedente applicato a $\mathcal{R'} =\mathcal{R}$ ci
     dà una disuguaglianza, per dimostrare l'altro verso costruiamo per
     ogni $R\in \mathcal{R}$ e $R_0\subseteq R$ l'istanza $R'$ che
     abbiamo utilizzato per calcolare la soluzione POR, allora per
     definizione si ha
     \[ C\pa{x^{WE}\pa{R'}} = C\pa{x^{POR}\pa{R,R_0}} \]
-    e si può dimostrara che
+    e si può dimostrare che
     \[ C\pa{x^{SO}\pa{R'}} = C\pa{x^{SO}\pa{R}} \]
     da cui la disuguaglianza cercata passando all'estremo inferiore.
   \item In modo analogo al punto precedente, data un'istanza $R\in
@@ -1290,8 +1319,8 @@ Vale:
   \end{enumerate}
 \end{proof}
 
-Possiamo ora enunciare e dimostrare un teorema analogo al teorema di
-Roughgardend e Tardos.
+Enunciamo e dimostriamo un teorema analogo al teorema di Roughgardend
+e Tardos.
 \begin{myteo}
 \label{teo:poa-por}
   \[ \inf _{\small\begin{matrix}R\in \mathcal{R}^{conv}\\R_0\subseteq
@@ -1346,7 +1375,7 @@ Roughgardend e Tardos.
 
 In questa sezione chiameremo il costo dato dalle funzioni $l_j$
 \textit{latenza} in modo da non confonderlo con il costo economico
-(\textit{prezzo}) che stiamo introducendo.
+(\textit{prezzo}) che stiamo per introdurre.
 
 Per aggiungere al nostro modello un \textbf{costo economico} (che gli
 utenti devono pagare per utilizzare la rete) aggiungiamo ad ogni arco
@@ -1425,7 +1454,14 @@ nuovo caso usando le nuove funzioni costo $l_i\pa{x_i} + p_i$ ottenendo
   indichiamo una tale soluzione con $x^{WE}$.
 \end{mydef}
 
-TODO: perché la condizione ``=d''?
+Nella definzione di equilibrio di Wardrop abbiamo inserito l'ultima
+condizione in modo da garantire che venga instradata la massima
+quantità di traffico possibile senza sforare la \textit{reservation
+  utility}\footnote{Dovremmo in realtà prevedere anche il caso in cui
+  abbiamo raggiunto la reservation utility ma possiamo ancora
+  aumentare il traffico (succede se almeno una funzione latenza è
+  costante in un intorno destro del valore dell'equilibrio), ma non lo
+  facciamo per non appesantire la trattazione}.
 
 Siccome non abbiamo chiesto la stretta crescenza delle funzioni
 latenza, l'equilibrio di Wardrop può non essere unico, chiamiamo
@@ -1435,8 +1471,8 @@ dei prezzi $p$.
 La definizione di costo globale (definizione \ref{def:costo-globale})
 non tiene in considerazione la \textit{reservation utility}, quindi se
 cercassimo semplicemente di minimizzare il costo globale otterremmo
-che la soluzione ottima consiste nel non instradare alcun
-traffico. Per questo introduciamo una nuova funzione.
+che la soluzione ottima ha traffico nullo su tutti gli archi. Per
+questo introduciamo una nuova funzione obiettivo.
 
 \begin{mydef}[Social surplus]
   Data una soluzione $x$ chiamiamo \textit{social surplus} la
@@ -1476,6 +1512,10 @@ La soluzione socialmente ottima non sarà unica, ma diverse soluzioni
 avranno lo stesso social surplus, quindi è ben definita la quantità
 \[ \mathbb{S}\pa{x^{S}} \]
 
+Osserviamo che l'ottimo sociale non dipende dai prezzi, infatti oltre
+a non essere presenti nella funzione obiettivo, non sono presenti
+nemmeno nei vincoli.
+
 Anche l'equilibrio di Wardrop può non essere unico e, a differenza dei
 casi precedenti, due equilibri di Wardrop possono avere social surplus
 diversi, scriviamo quindi
@@ -1493,8 +1533,8 @@ utenti in funzione dei prezzi della rete, ma non abbiamo detto come
 vengono scelti i prezzi dai gestori.
 
 Iniziamo dal caso più semplice in cui tutti gli archi $\mathcal{I}$
-sono gestiti da un monopolista che, una volta decisi i prezzi $p_i$,
-otterrà il guadagno:
+sono gestiti da un monopolista che, una volta decisi i prezzi $p_i$, e
+data una soluzione $x\in W(p)$, otterrà il guadagno:
 \[ \Pi (p,x) = \sum _{i\in\mathcal{I}} p_i x_i \]
 
 La scelta che massimizza il suo guadagno sarà data dall'equilibrio di
@@ -1518,7 +1558,7 @@ possiamo calcolare una quantità simile al prezzo dell'anarchia, questa
 quantità sarà ora:
 \[ \inf \frac{\mathbb{S}\pa{x^{ME}}}{\mathbb{S}\pa{x^S}} \]
 
-In realtà si scopre che queste due quantità sono uguali, infatti vale
+In realtà si scopre che questo rapporto è sempre $1$, infatti vale
 il seguente teorema:
 
 \begin{myteo}[Ottimalità dell'equilibrio di
@@ -1593,7 +1633,7 @@ può quindi dimostrare il seguente teorema:
   \[ \frac{\mathbb{S}\pa{x^{OE}}} {\mathbb{S}\pa{x^S}} \ge
     \frac{5}{6} \]
 \end{myteo}
-non dimostriamo questo teorema (la dimostrazione si può trovare
+Non dimostriamo questo teorema (la dimostrazione si può trovare
 nel'articolo citato), ma mostriamo un esempio in cui si ottiene il
 minimo di questa quantità.
 
