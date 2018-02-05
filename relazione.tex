@@ -408,6 +408,7 @@ semplicità, che tutto il traffico debba essere instradato tra un'unica
 sorgente e un'unica destinazione.
 
 \begin{myes}[Esempio di Pigou discretizzato]
+\label{es:pigou-nash}
   Riprendiamo l'esempio di Pigou (vedi figura \ref{fig:esempio-pigou})
   dove abbiamo discretizzato il traffico a due unità (che saranno i
   nostri giocatori).
@@ -1585,19 +1586,34 @@ Ancora una volta vogliamo dare un limite al prezzo dell'anarchia, si
 può quindi dimostrare il seguente teorema:
 
 \begin{myteo}[Efficienza dell'equilibrio di
-  oligopolio{\cite[Teorema 3.14]{menache2011network}}]
+  oligopolio{\cite[Teorema 5.2]{acemoglu2007-2}}]
   Data una rete composta da $I$ link paralleli gestiti da $S$
   provider, dette $x^{S}$ una soluzione socialmente ottima e
   $\pa{p^{OE},x^{OE}}$ un equilibrio di oligopolio, si ha:
   \[ \frac{\mathbb{S}\pa{x^{OE}}} {\mathbb{S}\pa{x^S}} \ge
     \frac{5}{6} \]
 \end{myteo}
-non dimostriamo questo teorema (la dimostrazione si può trovare nel
-libro citato), ma mostriamo un esempio in cui si ottiene il minimo di
-questa quantità.
+non dimostriamo questo teorema (la dimostrazione si può trovare
+nel'articolo citato), ma mostriamo un esempio in cui si ottiene il
+minimo di questa quantità.
 
 \begin{myes}
-  TODO
+  Consideriamo una rete dove ogni arco è di proprietà di un gestore
+  diverso, sia $d=1$ il flusso massimo che vogliamo instradare e $R=1$
+  la \textit{reservation utility}, supponiamo che le latenze siano:
+  \begin{align*}
+    l_1(x_1) &= 0 \\
+    l_i(x_i) &= \frac{3}{2}(I-1)x_i & 2 \le i \le I
+  \end{align*}
+  Il flusso ottimo sarà
+  \[ x^S = \bra{1,0,0,\dots, 0} \]
+  mentre si può vedere che l'equilibrio di oligopolio avrà flusso
+  \[ x^{OE} = \bra{ \frac{2}{3}, \frac{1}{3(I-1)}, \dots ,
+      \frac{1}{3(I-1)}} \]
+  si ottiene
+  \begin{align*}
+    \mathbb{S}\pa{x^S} & = 1 & \mathbb{S}\pa{x^{OE}} & = \frac{5}{6}
+  \end{align*}
 \end{myes}
 
 
@@ -1606,7 +1622,203 @@ questa quantità.
 \section{Teoria dei giochi}
 \label{sec:teoria-giochi}
 
-\cite{menache2011network}
+In questa appendice diamo alcune definizioni di teoria dei giochi che
+abbiamo usato precedentemente.
+
+\begin{mydef}[Gioco]% strategico]
+  Un gioco è dato da $\pa{\mathcal{I},\pa{S_i}_{i\in\mathcal{I}},
+    \pa{u_i}_{i\in\mathcal{I}}}$ con:
+  \begin{itemize}
+  \item $\mathcal{I}$ insieme \textbf{finito} dei giocatori,
+  \item $S_i$ insieme non vuoto delle azioni possibili per il
+    giocatore $i$,
+  \item $u_i: \prod _{i\in\mathcal{I}} S_i \to \mathbb{R}$ guadagno
+    per il giocatore $i$ in funzione delle azioni di tutti i
+    giocatori.
+  \end{itemize}
+\end{mydef}
+
+L'obiettivo di ogni giocatore è di massimizzare il proprio guadagno,
+in generale il suo guadagno dipenderà sia dalla strategia da lui
+scelta, sia dalla strategia scelta dagl'altri giocatori.
+
+\begin{myes}[Matching pennies]
+\label{es:matching-pennies}
+  In questo gioco due giocatori mostrano contemporaneamente la faccia
+  di una moneta (dopo averla scelta segretamente), se le facce sono
+  uguali vince il primo giocatore, se sono diverse il secondo.
+  
+  Formalizzando abbiamo:
+  \begin{align*}
+    \mathcal{I} &= \set{1,2} &
+                               S_1 = S_2 &= \set{\text{Testa},\text{Croce}}
+  \end{align*}
+  \begin{table}[!ht]
+    \centering
+    \begin{tabular}{rcc}
+      & Testa & Croce \\
+      \cline{2-3}
+      Testa & \multicolumn{1}{|c|}{$1,-1$} & \multicolumn{1}{|c|}{$-1,1$}  \\
+      \cline{2-3}
+      Croce & \multicolumn{1}{|c|}{$-1,1$} & \multicolumn{1}{|c|}{$1,-1$}  \\
+      \cline{2-3}
+    \end{tabular}
+    
+    \caption{Funzioni guadagno per \textit{matching pennies}, le righe
+      rappresentano la scelta del primo giocatore, le colonne la scelta
+      del secondo giocatore, in ogni cella si può leggere il valore di
+      $u_1,u_2$}
+    \label{tab:u1u2-matching-pennies}
+  \end{table}
+  Questo metodo tabellare di rappresentare i giochi a due giocatori è
+  molto comodo, infatti lo abbiamo usato anche nell'esempio
+  \ref{es:pigou-nash}.
+\end{myes}
+
+Dobbiamo analizzare il guadagno di ogni giocatore in funzione di tutte
+le scelte, per ogni giocatore $i$ separiamo l'azione del giocatore
+stesso dall'azione degl'altri giocatori, quindi definiamo:
+\begin{itemize}
+\item $S = \prod _{i\in\mathcal{I}} S_i$,
+\item se $s = \bra{s_i}_{i\in\mathcal{I}} \in S$ allora $s_{-i} =
+  \bra{s_j}_{j\neq i}$
+\item $\displaystyle S_{-i} = \prod _{j\in\mathcal{I},j\neq i} S_j$,
+\end{itemize}
+
+Ci chiediamo quale sia la strategia migliore per un giocatore, se
+esiste una strategia $s_i\in S_i$ che massimizza il guadagno qualunque
+sia la scelta degl'altri giocatori ci aspettiamo che il giocatore la
+giochi, definiamo quindi cos'è una strategia dominante
+
+\begin{mydef}[Strategia dominante]
+  Per un giocatore $i\in\mathcal{I}$ un'azione $s_i\in S_i$ è una
+  \textbf{strategia dominante} se:
+  \[ \forall s_{-i} \in S_{-i}\;\; \forall s_i' \in S_i\;\;\;
+    u_i\pa{s_i,s_{-i}} \ge u_i\pa{s_i',s_{-i}} \]
+\end{mydef}
+
+\begin{myes}[Dilemma del prigioniero]
+  Due criminali vengono arrestati per aver commesso un reato, hanno a
+  disposizione due scelte: collaborare o non collaborare con la
+  polizia, in base alle loro scelte verrà deciso quanti anni di
+  carcere dovranno fare. Le loro funzioni guadagno sono descritte in
+  tabella \ref{tab:u1u2-prigioniero}.
+  
+  \begin{table}[!ht]
+    \centering
+    \begin{tabular}{rcc}
+      & Non collaborare & Collaborare \\
+      \cline{2-3}
+      Non collaborare & \multicolumn{1}{|c|}{$-2,-2$} & \multicolumn{1}{|c|}{$-5,-1$}  \\
+      \cline{2-3}
+      Collaborare & \multicolumn{1}{|c|}{$-1,-5$} & \multicolumn{1}{|c|}{$-4,-4$}  \\
+      \cline{2-3}
+    \end{tabular}
+    \caption{Funzioni guadagno per il dilemma del prigioniero}
+    \label{tab:u1u2-prigioniero}
+  \end{table}
+  
+  Si può vedere che la strategia ``collaborare'' è una
+  \textbf{strategia dominante}.
+
+  Osserviamo anche che la strategia (collaborare--collaborare) (che
+  massimizza il profitto di ognuno) in realtà non rappresenta il
+  massimo guadagno possibile, infatti la strategia (non collaborare --
+  non collaborare) dà un guadagno strettamente maggiore ad entrambi i
+  prigionieri. Possiamo quindi dire che l'egoismo sta facendo fare più
+  anni di carcere ad entrambi.
+\end{myes}
+
+Non in tutti i giochi esiste una strategia dominante per ogni
+giocatore, in alcuni giochi potrebbe esistere solo per alcuni
+giocatori, in altri potrebbe non esistere per alcun giocatore.
+
+Vediamo un esempio in cui non è disponibile una strategia dominate
+
+\begin{myes}[Dilemma del prigioniero con suicidio]
+  Ora i prigionieri hanno a disposizione una terza strategia:
+  suicidarsi. Le funzioni guadagno sono descritte in tabella
+  \ref{tab:u1u2-prigioniero-suicidio}.
+  \begin{table}[!ht]
+    \centering
+    \begin{tabular}{rccc}
+      & Non collaborare & Collaborare & Suicidarsi \\
+      \cline{2-4}
+      Non collaborare & \multicolumn{1}{|c|}{$-2,-2$} & \multicolumn{1}{|c|}{$-5,-1$} & \multicolumn{1}{|c|}{$0,-20$}  \\
+      \cline{2-4}
+      Collaborare & \multicolumn{1}{|c|}{$-1,-5$} & \multicolumn{1}{|c|}{$-4,-4$}  & \multicolumn{1}{|c|}{$-4,-20$} \\
+      \cline{2-4}
+      Suicidarsi & \multicolumn{1}{|c|}{$-20,0$} & \multicolumn{1}{|c|}{$-20,-4$}  & \multicolumn{1}{|c|}{$-20,-20$} \\
+      \cline{2-4}
+    \end{tabular}
+    \caption{Funzioni guadagno per il dilemma del prigioniero con
+      suicidio}
+    \label{tab:u1u2-prigioniero-suicidio}
+  \end{table}
+
+  In questo caso non c'è una strategia dominante, infatti
+  ``Collaborare'' massimizza il guadagno se l'altro giocatore non
+  collabora, mentre ``non collaborare'' massimizza il guadagno se
+  l'altro giocatore si suicida\footnote{Utilizzando il concetto di
+    \textit{strategia strettamente dominata} potremmo risolvere questo
+    gioco scartando le scelte ``suicidio'', ma non ci serve ai fini
+    della nostra trattazione}.
+
+  Osserviamo, però, che se ``suggerissimo'' ai giocatori (informando
+  ognuno anche delle scelte suggerite agl'altri) di giocare la
+  strategia (collaborare--collaborare) allora questi non avrebbero
+  interesse a spostarsi, ad esempio il primo giocatore vede che gli
+  conviene seguire il suggerimento se suppone che l'altro giocatore lo
+  stia seguendo.
+\end{myes}
+
+La possibile esistenza di una strategia ``stabile'' che abbiamo visto
+nell'esempio precedente porta alla definizione di quilibrio di Nash.
+
+\begin{mydef}[Equilibrio di Nash]
+  Sia  $\pa{\mathcal{I},\pa{S_i}_{i\in\mathcal{I}},
+    \pa{u_i}_{i\in\mathcal{I}}}$ un gioco, allora  
+  $s^* \in S$ è un equilibrio di Nash se
+  \[ \forall i\in \mathcal{I}\;\; \forall s_i \in S_i \;\;\;
+    u_i\pa{s^*_i,s^*_{-i}} \ge u_i\pa{s_i,s^*_{-i}} \]
+\end{mydef}
+
+\begin{myoss}
+  Se ogni giocatore ha a disposizione una strategia dominante allora
+  il vettore delle strategie dominanti è un equilibrio di Nash.
+  
+  Il viceversa in generale è falso.
+\end{myoss}
+
+L'equilibrio di Nash potrebbe non esistere o esistere ma non essere
+unico. Ad esempio si può vedere che in \textit{matching pennies}
+(esempio \ref{es:matching-pennies}) non esiste alcun equilibrio di
+Nash, nel prossimo esempio invece non abbiamo l'unicità.
+
+\begin{myes}[Battaglia dei sessi]
+  In questo gioco i due giocatori possono decidere se andare all'opera
+  o se andare a vedere la partita di football, ognuno ha una
+  preferenza per una delle due possibilità, ma entrambi preferiscono
+  andare ad un evento insieme invece che da soli. Le funzioni guadagno
+  sono rappresentate in tabella \ref{tab:u1u2-sessi}.
+  
+  \begin{table}[!ht]
+    \centering
+    \begin{tabular}{rcc}
+      & Opera & Football \\
+      \cline{2-3}
+      Opera & \multicolumn{1}{|c|}{$2,1$} & \multicolumn{1}{|c|}{$0,0$}  \\
+      \cline{2-3}
+      Football & \multicolumn{1}{|c|}{$0,0$} & \multicolumn{1}{|c|}{$1,2$}  \\
+      \cline{2-3}
+    \end{tabular}
+    \caption{Funzioni guadagno per la battaglia dei sessi}
+    \label{tab:u1u2-sessi}
+  \end{table}
+  
+  Qui esistono due equilibri di Nash: $\pa{\text{Opera},\text{Opera}}$
+  e $\pa{\text{Football},\text{Football}}$.
+\end{myes}
 
 \bibliographystyle{ieeetr}
 
