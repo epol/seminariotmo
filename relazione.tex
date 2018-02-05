@@ -202,7 +202,7 @@ data dalla seguente definizione:
     percorsi da $s_i$ a $t_i$,
   \item $X = \bra{X_i}_{i\in W}$ dove $X_i$ rappresenta la quantità di
     traffico da instradare da $s_i$ a $t_i$,
-  \item $l = \bra{l_j}_{j\in A}$ dove $l_j(x_j)$ è il costo del link
+  \item $l = \bra{l_j}_{j\in A}$ dove $l_j(x_j)$ è il costo dell'arco
     $j$ con un traffico $x_j$.
   \end{itemize}
   Supponiamo che le funzioni $l_j$ siano \textbf{non negative},
@@ -245,6 +245,7 @@ traffico di quel percorso otteniamo
 questa quantit\`a rappresenta il costo pagato complessivamente dagli utenti.
 
 \begin{mydef}[Costo globale di una soluzione]
+\label{def:costo-globale}
   \[ C\pa{x} = \sum _{j\in A} l_j\pa{x_j}x_j \]  
 \end{mydef}
 
@@ -255,6 +256,7 @@ Data un'istanza $R$ ci chiediamo se esiste una soluzione che minimizza
 il costo globale della soluzione.
 
 \begin{mydef}[Instramento socialmente ottimo]
+\label{def:soluzione-so}
   Chiamiamo \textbf{instradamento socialmente ottimo} di $R$ una
   soluzione che minimizza la funzione costo $C$. 
 \end{mydef}
@@ -654,7 +656,25 @@ definita).
   quindi le $L_j$ sono lineari in $\bra{x_j,y_j}$, ma questo accade se
   e solo se le $l_j$ sono costanti negli stessi intervalli.
 
-  Quindi per ogni $j\in A$ abbiamo $l_j(x) = l_j(y)$ e quindi $C(x) = C(y)$.  
+  Quindi per ogni $j\in A$ abbiamo $l_j(x) = l_j(y)$, quindi per ogni
+  $p\in P$ si ha
+  \[ \sum _{j\in p} l_j\pa{x_j} = \sum _{j\in p} l_j\pa{y_j} \]
+  
+  Dati due percorsi $p,p'\in P_i$ tali che $x_p>0$ e $y_{p'}>0$ possiamo
+  applicare la seconda condizione dell'equilibrio di Wardrop nei due
+  versi ottenendo
+  \[ \sum _{j\in p} l_j\pa{x_j} = \sum _{j\in p'} l_j\pa{y_j} \]
+  
+  Osserviamo ora che il costo globale per un equilibrio di Wardrop si
+  può scrivere come:
+  \[ C\pa{x} = \sum _{p\in P} \pa{ x_p \sum _{j\in p} l_j\pa{x_j}} =
+    \sum _{i\in W} \bra{ \sum _{p\in P_i} \pa{ x_p \sum _{j\in p_i}
+        l_j\pa{x_j}} } = \sum _{i\in W} \pa{ X_i \sum _{j\in p_i}
+      l_j\pa{x_j}} \]
+  dove $p_i\in P_i$ è un percorso tale che $x_{p_i} > 0$.
+
+  Scrivendo la stessa formula per $C\pa{y}$ e sostituendo le relazioni
+  precedentemente trovate si ha la tesi.
 \end{proof}
 
 \begin{myes}[Esempio di Pigou]
@@ -1318,9 +1338,268 @@ Roughgardend e Tardos.
   Tardos per funzioni affini abbiamo la tesi.
 \end{proof}
 
-
-
 \section{Instradamento in presenza di costi fissati dai gestori della rete}
+
+\subsection{Modello e comportamento degli utenti}
+\label{sec:prezzi-modello}
+
+In questa sezione chiameremo il costo dato dalle funzioni $l_j$
+\textit{latenza} in modo da non confonderlo con il costo economico
+(\textit{prezzo}) che stiamo introducendo.
+
+Per aggiungere al nostro modello un \textbf{costo economico} (che gli
+utenti devono pagare per utilizzare la rete) aggiungiamo ad ogni arco
+$j\in A$ un prezzo unitario $p_j$, l'utente pagherà sia in latenza sia
+in costo economico, in particolare per attraversare l'arco $j$
+pagherà:
+\[ l_j\pa{x_j} + p_j \]
+per semplicità stiamo mescolando le due misure diverse ($l_j$ potrebbe
+rappresentare un tempo mentre $p_j$ una valuta).
+
+A differenza delle latenze (che sono intrinseche della rete stradale),
+i prezzi verranno decisi dai gestori dei singoli archi, ogni gestore
+cercherà di massimizzare il proprio profitto.
+
+Per semplificare il modello (e riuscire ad ottenere dei risultati
+significativi) supponiamo che la nostra rete sia costituita da una
+sorgente, una destinazione e $I$ archi $\mathcal{I} = \set{1,...,I}$
+in parallelo ognuno con una funzione latenza $l_i$ \textbf{convessa},
+\textbf{non decrescente}, \textbf{differenziabile} e \textbf{nulla in
+  $0$}. Un esempio di tale rete è disegnato in figura \ref{fig:provider}
+
+\begin{figure}[ht]
+  \centering
+  \begin{tikzpicture}[mnode/.style={circle,fill=blue!20},>=latex,snode/.style={circle,fill=red!70}]
+    \node[mnode] (s) at (0,0) {s};
+    \node[mnode] (t) at (5,0) {t};
+    \draw [->,color=blue] (s) to [bend left=40] node[above] {\small $l_1(x_1)$, $p_1$} (t);
+    \draw [->,color=green] (s) to [bend left=20] node[above] {\small $l_2(x_2)$, $p_2$} (t);
+    \draw [->,color=black] (s) to node[above] {\small $l_3(x_3)$, $p_3$} (t);
+    \draw [->,color=black] (s) to [bend right=20] node[above] {\small $l_4(x_4)$, $p_4$} (t);
+    \draw [->,color=magenta] (s) to [bend right=40] node[above] {\small $l_5(x_5)$, $p_5$} (t);
+  \end{tikzpicture}
+  \caption{Esempio di rete nel nuovo modello: i diversi colori
+    degl'archi indicano i diversi gestori}
+  \label{fig:provider}
+\end{figure}
+
+Come già detto, i provider sceglieranno i prezzi in modo da
+massimizzare il loro profitto, gli utenti continueranno a scegliere
+quale strada utilizzare per minimizzare la latenza ed il costo della
+trasmissione.
+
+Prevediamo anche un limite superiore (\textit{reservation utility})
+alla spesa (sia in termini di latenza che in termini di spesa) che
+l'utente è disposto a sostenere.
+
+\begin{mydef}
+  Dato l'insieme di archi $\mathcal{I}$, le loro funzioni
+  latenza $\bra{l_i}_i\in\mathcal{I}$ e il vettore dei prezzi
+  $\bra{p_i}_{i\in\mathcal{I}}$ scelti dai provider diciamo che un
+  vettore $x\in \mathbb{R}_+^\mathcal{I}$ è \textbf{soluzione del
+    problema} se:
+  \begin{align*}
+    \forall i\in \mathcal{I}\;\; & x_i \ge 0 \\
+    \forall i\in \mathcal{I}\;\; & l_i(x_i) + p_i \le R \\
+    & \sum _{i\in \mathcal{I}} x_i \le d 
+  \end{align*}
+  Dove $R$ è la \textit{reservation utility} (il massimo costo totale
+  che gli utenti sono disposti a pagare) e $d$ è la quantità (massima)
+  di traffico che si vuole instradare.
+\end{mydef}
+
+Possiamo riapplicare la definizione di equilibrio di Wardrop a questo
+nuovo caso usando le nuove funzioni costo $l_i\pa{x_i} + p_i$ ottenendo
+
+\begin{mydef}
+  Una soluzione $x\in \mathbb{R}_+^\mathcal{I}$ è un
+  \textbf{equilibrio di Wardrop} se:
+  \begin{align*}
+    l_i(x_i) + p_i &= \min _j \set{l_j(x_j)+p_j} & \forall i\text{ con } x_i>0 \\
+    l_i(x_i) + p_i &\le R \\
+    \sum _{i\in \mathcal{I}} x_i &\le d \\
+    \sum _{i\in \mathcal{I}} x_i &= d & \text { se } \min _j
+                                        \set{l_j(x_j)+p_j} <R
+  \end{align*}
+  indichiamo una tale soluzione con $x^{WE}$.
+\end{mydef}
+
+TODO: perché la condizione ``=d''?
+
+Siccome non abbiamo chiesto la stretta crescenza delle funzioni
+latenza, l'equilibrio di Wardrop può non essere unico, chiamiamo
+quindi $W(p)$ l'insieme degli equilibri di Wardrop con vettore
+dei prezzi $p$.
+
+La definizione di costo globale (definizione \ref{def:costo-globale})
+non tiene in considerazione la \textit{reservation utility}, quindi se
+cercassimo semplicemente di minimizzare il costo globale otterremmo
+che la soluzione ottima consiste nel non instradare alcun
+traffico. Per questo introduciamo una nuova funzione.
+
+\begin{mydef}[Social surplus]
+  Data una soluzione $x$ chiamiamo \textit{social surplus} la
+  quantità:
+  \[ \mathbb{S}(x) = \sum _{i\in\mathcal{I}}\pa{ R -
+      l_i\pa{x_i}}x_i \]
+\end{mydef}
+
+Questa funzione rappresenta la differenza tra quanto gli utenti sono
+disposti a spendere e quanto spendono in \textbf{latenza}, il prezzo
+degli archi quindi non compare.
+
+Osserviamo che per $R$ sufficientemente grande (quando tutto il
+traffico viene instradato) si ha:
+\[ \mathbb{S}(x) = Rd - C(x) \]
+quindi la nuova funzione di \textit{social surplus} non è troppo
+lontana dalla vecchia funzione costo globale.
+
+Diamo ora una definizione aggiornata di soluzione socialmente ottima
+\begin{mydef}[Soluzione socialmente ottima]
+  Diciamo che una soluzione è un \textbf{ottimo sociale} se risolve il
+  problema:
+  \begin{align*}
+    \text{massimizzare }\;\; & \mathbb{S}(x) = \sum
+                               _{i\in\mathcal{I}}\pa{ R - l_i\pa{x_i}}x_i
+    \\
+    \text{tale che }\;\; & x\ge 0\\
+                             & l_i(x) \le R \\
+                             & \sum _{i\in \mathcal{I}} x_i \le d
+  \end{align*}
+  indichiamo\footnote{Non usiamo $x^{SO}$ per non confonderci con la
+    soluzione della definizione \ref{def:soluzione-so}}. una tale
+  soluzione con $x^S$.
+\end{mydef}
+
+La soluzione socialmente ottima non sarà unica, ma diverse soluzioni
+avranno lo stesso social surplus, quindi è ben definita la quantità
+\[ \mathbb{S}\pa{x^{S}} \]
+
+Anche l'equilibrio di Wardrop può non essere unico e, a differenza dei
+casi precedenti, due equilibri di Wardrop possono avere social surplus
+diversi, scriviamo quindi
+\[ \mathbb{S}\pa{x^{WE}} = \max _{x\in W(p)} \mathbb{S}\pa{x} \]
+
+Si può dimostare che questo massimo si raggiunge quando si massimizza
+la quantità di traffico effettivamente instradata $\sum _{i\in
+  \mathcal{I}} x_i$.
+
+\subsection{Comportamento dei gestori}
+\label{sec:prezzi-gestori}
+
+Nella sezione precedente abbiamo definito come si comportano gli
+utenti in funzione dei prezzi della rete, ma non abbiamo detto come
+vengono scelti i prezzi dai gestori.
+
+Iniziamo dal caso più semplice in cui tutti gli archi $\mathcal{I}$
+sono gestiti da un monopolista che, una volta decisi i prezzi $p_i$,
+otterrà il guadagno:
+\[ \Pi (p,x) = \sum _{i\in\mathcal{I}} p_i x_i \]
+
+La scelta che massimizza il suo guadagno sarà data dall'equilibrio di
+monopolio.
+\begin{mydef}[Equilibrio di monopolio]
+  I vettori $\pa{p^{ME},x^{ME}}\ge 0$ sono un \textbf{equilibrio di
+    monopolio} se $x^{ME}\in W(p^{ME})$ e 
+  \begin{align*}
+    \forall p\ge 0,\; \forall x\in W(p) && \Pi \pa{p^{ME},x^{ME}}
+                                           \ge \Pi \pa{p,x}
+  \end{align*}
+\end{mydef}
+
+Osserviamo che quando ``proviamo'' un nuovo prezzo $p\ge 0$ per
+calcolare il guadagno $\Pi$ dobbiamo prima calcolare una nuova
+soluzione $x\in W\pa{p}$, cioè stiamo calcolando la risposta degli
+utenti al nuovo prezzo del gestore.
+
+Analogamente a quanto fatto con le altre nozioni di equilibrio,
+possiamo calcolare una quantità simile al prezzo dell'anarchia, questa
+quantità sarà ora:
+\[ \inf \frac{\mathbb{S}\pa{x^{ME}}}{\mathbb{S}\pa{x^S}} \]
+
+In realtà si scopre che queste due quantità sono uguali, infatti vale
+il seguente teorema:
+
+\begin{myteo}[Ottimalità dell'equilibrio di
+  monopolio{\cite[Proposizione 3.2]{acemoglu2007-2}}]
+  Un vettore $x\in \mathbb{R}_+^\mathcal{I}$ è un \textbf{equilibrio
+    di monopolio} se e solo se è un \textbf{ottimo sociale}.
+\end{myteo}
+
+Non dimostriamo questo teorema (la dimostrazione si può trovare
+nell'articolo citato), ma osserviamo che il risultato non è così
+sorprendente se consideriamo che:
+\begin{enumerate}
+\item l'operatore può ``spostare'' il traffico da un arco all'altro
+  semplicemente ritoccando i prezzi, quindi (ser pur indirettamente)
+  può decidere la distribuzione del traffico;
+\item il massimo prezzo che può fissare su un arco (dato il traffico)
+  è $R - l_i(x_i)$, quindi massimizzare questa quantità massimizza il
+  guadagno dell'operatore;
+\item il social surplus è definito proprio come
+  $\sum _{i\in\mathcal{I}}\pa{ R - l_i\pa{x_i}}x_i$
+\end{enumerate}
+
+
+Passiamo ora al caso in cui sono presenti $S$ operatori e ognuno di
+questi controlla il prezzo di un certo sottoinsieme di link
+$\mathcal{I}_s$ (per $s\in S$).
+
+Il guadagno di ogni operatore dipende dalla disposizione del traffico
+e quindi sia dalla sua scelta dei prezzi sia della scelta degli
+altri. Si crea quindi un gioco tra gli operatori.
+
+Dato un operatore $s\in S$ definiamo:
+\begin{itemize}
+\item $p_s = \bra{p_i}_{i\in \mathcal{I}_s}$
+\item $p_{-s} = \bra{p_i}_{i\not\in \mathcal{I}_s}$
+\item $\displaystyle \Pi _s \pa{p_s, p_{-s},x} = \sum _{i\in
+    \mathcal{I}_s} p_i x_i\;$ con $x\in W\pa{p_s, p_{-s}}$
+\end{itemize}
+
+Il gioco risultante avrà:
+\begin{itemize}
+\item insieme dei giocatori $S$,
+\item insieme delle strategie del giocatore $s$: $\mathbb{R}_+
+  ^{\abs{\mathcal{I}_s}}$,
+\item funzioni guadagno $\Pi _s$
+\end{itemize}
+
+Ogni provider cercherà di massimizzare il proprio profitto, siamo
+quindi in una situazione in cui vogliamo cercare un \textbf{equilibrio
+  di Nash}.
+
+L'equilibrio di Nash per questo gioco si traduce nell'equilibrio di
+oligopolio così definito:
+\begin{mydef}[Equilibrio di oligopolio]
+  Diciamo che i vettori $\pa{p^{OE},x^{OE}}\ge 0$ sono un
+  \textbf{equilibrio di oligopolio} se $x^{OE}\in W\pa{p^{OE}}$ e
+  $\forall s\in S$ si ha:
+  \begin{align*}
+    & \forall p_s \ge 0\;\;\; \forall x\in W\pa{p_s,p^{OE}_{-s}} \\
+    & \Pi_s \pa{p^{OE}_s, p^{OE}_{-s},x^{OE}} \ge \Pi _s \pa{p_s, p^{OE}_{-s},x}
+  \end{align*}
+\end{mydef}
+
+Ancora una volta vogliamo dare un limite al prezzo dell'anarchia, si
+può quindi dimostrare il seguente teorema:
+
+\begin{myteo}[Efficienza dell'equilibrio di
+  oligopolio{\cite[Teorema 3.14]{menache2011network}}]
+  Data una rete composta da $I$ link paralleli gestiti da $S$
+  provider, dette $x^{S}$ una soluzione socialmente ottima e
+  $\pa{p^{OE},x^{OE}}$ un equilibrio di oligopolio, si ha:
+  \[ \frac{\mathbb{S}\pa{x^{OE}}} {\mathbb{S}\pa{x^S}} \ge
+    \frac{5}{6} \]
+\end{myteo}
+non dimostriamo questo teorema (la dimostrazione si può trovare nel
+libro citato), ma mostriamo un esempio in cui si ottiene il minimo di
+questa quantità.
+
+\begin{myes}
+  TODO
+\end{myes}
+
 
 \appendix
 
@@ -1331,6 +1610,6 @@ Roughgardend e Tardos.
 
 \bibliographystyle{ieeetr}
 
-\bibliography{menache2011network,wardrop1952,haurie1985,roughgarden2002,braess1968,acemoglu2007}
+\bibliography{menache2011network,wardrop1952,haurie1985,roughgarden2002,braess1968,acemoglu2007,acemoglu2007-2}
 
 \end{document}
