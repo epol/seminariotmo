@@ -162,7 +162,7 @@ vettori: vettore delle sorgenti, vettore delle destinazioni e vettore
 delle quantità di traffico da instradare.
 
 Supponiamo tutto il traffico \textbf{infinitamente divisibile}, cioè
-possiamo dividerlo sulle nostre strade in rapporti arbitrari. Questo
+possiamo dividerlo sulle nostre strade in frazioni arbitrarie. Questo
 non è coerente con la realtà delle reti stradali e internet in cui il
 traffico è discreto, ma ne descrive bene il comportamento quando la
 quantità di utenti è sufficientemente grande.
@@ -247,7 +247,7 @@ il traffico su ogni arco e $\bra{x_p}_{p\in P}$ per descrivere il
 traffico su ogni percorso.
 
 Questi due vettori (che esprimiamo come un unico vettore $x$)
-descrivono un possibile schema se soddisfano la definzione di soluzione:
+descrivono un possibile schema se soddisfano la definizione di soluzione:
 
 \begin{mydef}[Soluzione di un'istanza]
   Data un'istanza $R=(V,A,P,s,t,X,l)$ un vettore
@@ -277,13 +277,13 @@ questa quantit\`a rappresenta il costo pagato complessivamente dagli utenti.
   \[ C\pa{x} = \sum _{j\in A} l_j\pa{x_j}x_j \]  
 \end{mydef}
 
-\subsection{Instramento ottimo}
+\subsection{Instradamento ottimo}
 \label{sec:instramento-ottimo}
 
 Data un'istanza $R$ ci chiediamo se esiste una soluzione che minimizza
 il costo globale della soluzione.
 
-\begin{mydef}[Instramento socialmente ottimo]
+\begin{mydef}[Instradamento socialmente ottimo]
 \label{def:soluzione-so}
   Chiamiamo \textbf{instradamento socialmente ottimo} di $R$ una
   soluzione che minimizza la funzione costo $C$. 
@@ -321,9 +321,9 @@ seguente problema di minimizzazione:
   quindi le variabili $\bra{x_j}_{j\in A}$ sono limitate.
 \end{proof}
 
-\begin{myteo}[Esistenza dell'instradamento ottimo]
+\begin{mypro}[Esistenza dell'instradamento ottimo]
   Data un'istanza $R$ esiste sempre almeno un instradamento ottimo.
-\end{myteo}
+\end{mypro}
 \begin{proof}
   La funzione costo \`e somma di prodotto di funzioni continue, quindi
   \`e continua. I vincoli di soluzione formano un insieme
@@ -361,8 +361,8 @@ ben definito, \`e ben definita la quantit\`a $C\pa{x^{SO}\pa{R}}$.
     \begin{tikzpicture}[mnode/.style={circle,fill=blue!20,minimum size=0.65cm},>=latex,snode/.style={circle,fill=red!70}]
       \node[mnode] (1) at (0,0) {s}; 
       \node[mnode] (2) at (3,0) {t};
-      \draw [->] (1) to [bend left] node[above] {$l_1(x) = x$} (2);
-      \draw [->] (1) to [bend right] node[below] {$l_2(x) = 1$} (2);
+      \draw [->] (1) to [bend left] node[above] {$l_1(x_1) = x_1$} (2);
+      \draw [->] (1) to [bend right] node[below] {$l_2(x_2) = 1$} (2);
       \draw [->,color=red] (-4,0) -- node[above] {1 unità di traffico} (1) ;
       \draw [->,color=red] (2) --  (5,0) ;
       \node at (7,0) {};
@@ -509,10 +509,11 @@ da cui:
       s^*_{-i}}} = -\sum _{j\in p}l_j\pa{x^*_j} \]
 
 La condizione dell'equilibrio di Nash si può quindi riscrivere come:
-\[ \forall p\in P\;\;\; \sum _{j\in s_i}l_j\pa{x^*_j} \le \sum _{j\in
-    p}l_j\pa{x^*_j} \]
-osservando che $x_p > 0 \Leftrightarrow \exists i\in \mathcal{I}:\;
-s^*_i = p$ otteniamo che al limite
+\[ \forall p\in P\;\;\; \sum _{j\in s_i}l_j\pa{x^*_j} \lesssim \sum
+  _{j\in p}l_j\pa{x^*_j} \]
+osservando che
+$x_p > 0 \Leftrightarrow \exists i\in \mathcal{I}:\; s^*_i = p$
+otteniamo che al limite
 \[ \forall x_p >0, \forall p'\in P \;\;\; \sum _{j\in p}l_j\pa{x^*_j}
   \le \sum _{j\in p'}l_j\pa{x^*_j} \]
 cioè \textbf{i percorsi scelti sono quelli che minimizzano il tempo di
@@ -521,10 +522,12 @@ segno di uguaglianza (basta scambiare il ruolo delle variabili).
 
 Questo ci porta al primo criterio proposto da
 Wardrop\cite[pag. 345]{wardrop1952} per determinare la distribuzione
-del traffico: \textit{Il tempo di percorrenza di tutte le strade
+del traffico: \textit{il tempo di percorrenza di tutte le strade
   veramente usate è uguale, inoltre è più piccolo di quello che
   impiegherebbe un singolo veicolo a percorrere una strada non
-  utilizzata}
+  utilizzata}\footnote{Originale: \textit{The journey times on all the
+    routes actually used are equal, and less than those which would be
+    experienced by a single vehicle on any unused route.}}.
 
 Il ragionamento che abbiamo seguito, oltre a non essere ben
 formalizzato, non tiene in considerazione il problema che l'equilibrio
@@ -548,7 +551,7 @@ ad esempio, il seguente teorema:
 \subsection{Definizione e esistenza}
 \label{sec:wardrop-definizione}
 
-Formalizziamo il principio di Wardrop nel caso generale, applicando il
+Formalizziamo l'equilibrio di Wardrop nel caso generale, applicando il
 principio di Wardrop ad ogni coppia sorgente-destinazione otteniamo la
 seguente definizione:
 \begin{mydef}[Equilibrio di Wardrop]
@@ -637,7 +640,7 @@ definita).
     \forall p\in P_i,\;\; x_p = 0 & \Rightarrow \sum _{p\ni j} l_j(x_j) \ge -\theta _i
   \end{align*}
   queste sono proprio le condizioni di Wardrop dove la quantità
-  $-\theta _i$ rappresenta proprio la minima lunghezza effettiva di un
+  $-\theta _i$ rappresenta la minima lunghezza effettiva di un
   percorso tra $s_i$ e $t_i$.
 \end{proof}
 \begin{mycor}
@@ -755,7 +758,7 @@ soluzione ottima.
         x^{WE}\pa{R}}} = \frac{3}{4} \]
 \end{myteo}
 
-Non dimostraiamo quest'ultimo teorema (una dimostrazione si può
+Non dimostriamo quest'ultimo teorema (una dimostrazione si può
 trovare nel testo citato) e dimostriamo solo la prima
 parte del teorema di Roughgarden e Tardos (la seconda è un corollario
 del teorema \ref{teo:poa-we-conc}).
@@ -783,7 +786,7 @@ x^{WE}\pa{R_k}}} = 0 \]
 
   Sia $R_k$ l'istanza costituita come in figura
   \ref{fig:esempio-conv-poa} (differisce dall'esempio di Pigou per la
-  funzione $l_1$), come abbiamo già osservato precendentemente ci
+  funzione $l_1$), come abbiamo già osservato precedentemente ci
   bastano le variabili $x_1$ e $x_2$ (rispettivamente il traffico sul
   primo e sul secondo arco) per descrivere l'instradamento (l'insieme
   degli archi coincide con l'insieme dei percorsi).
@@ -912,9 +915,9 @@ farlo ci serve prima la definizione di sottorete.
   $R_0=(V_0,A_0,P_0,s_0,t_0)$ è una \textbf{sottorete} di $R$ se:
   \begin{enumerate}
   \item $V_0 \subseteq V$ e $A_0 = A \cap \pa{V_0\times V_0}$,
-  \item esistono due nodi $s_0,t_0\in V$ tali che tutti i percorsi di
-    $P$ passanti per $\pa{V_0,A_0}$ contengono un percorso in $P_0$ da
-    $s_0$ in $t_0$ sugl'archi di $A_0$.
+  \item $s_0,t_0\in V_0$ e questi nodi sono tali che tutti i percorsi
+    di $P$ passanti per $\pa{V_0,A_0}$ contengono un percorso in $P_0$
+    da $s_0$ in $t_0$ sugl'archi di $A_0$.
   \end{enumerate}
   Scriviamo $R_0\subseteq R$.
 \end{mydef}
@@ -978,7 +981,7 @@ Siamo ora pronti a definire cos'è un paradosso di Braess.
 \end{mydef}
 
 Nell'esempio \ref{es:braess} la sottorete in cui esiste il paradosso è
-l'arco 1--2 che inizialemente ha costo $+\infty$ e poi viene
+l'arco 1--2 che inizialmente ha costo $+\infty$ e poi viene
 migliorato facendolo passare a $0$.
 
 \section{Instradamento parzialmente ottimo}
@@ -1017,7 +1020,7 @@ soluzione socialmente ottima e definire (per $X_0>0$) la quantità
   \[ l_0\pa{X_0} = \left\{
       \begin{matrix}
         \frac{L\pa{X_0}}{X_0} & \text{ per } X_0 > 0 \\
-        \lim _{x\to 0} l_0\pa{x_0} & \text{ per } X_0 = 0
+        \lim _{x\to 0} l_0\pa{x} & \text{ per } X_0 = 0
       \end{matrix}
     \right. \]
 \end{mydef}
@@ -1146,7 +1149,7 @@ ben definita la quantità $C\pa{x^{POR}\pa{R,R_0}}$.
 All'inizio della sezione abbiamo supposto di avere un unico operatore.
 La definizione si può facilmente estendere al caso in cui sono
 presenti più operatori (ognuno dei quali gestisce una sua sottorete
-che non si intereseca con le altre) semplicemente sostituendo ad ogni
+che non si interseca con le altre) semplicemente sostituendo ad ogni
 sottorete la sua latenza effettiva.
 
 Continuiamo a mantenere, per semplicità, l'ipotesi di avere un unico
@@ -1205,14 +1208,14 @@ effetti accade nel prossimo esempio.
   \]
   a questo punto possiamo calcolare la soluzione POR ottenendo un
   costo globale $C\pa{x^{POR}\pa{R,R_0}} = 4.25$ che è strattamente
-  maggiore del costo della soluzione POR.
+  maggiore del costo della soluzione parzialmente ottima.
 
   Osserviamo che se avessimo calcolato anche una latenza effettiva
   ``di Wardrop'' (cioè calcolando un equilibrio di Wardrop all'interno
   di $R_0$) la soluzione globale ottenuta utilizzando questa latenza
   effettiva coinciderebbe con $x^{WE}\pa{R}$. Questa funzione è:
   \[ \tilde l _0 \pa{X_0} = \min\set{0.31, 0.4X_0} \]
-  che è sempre minore o uguale di $l_0\pa{X_0}$.
+  che è sempre maggiore o uguale di $l_0\pa{X_0}$.
 
   Quindi possiamo dire che esiste un paradosso di Braess in $R'$
   centrato nell'arco $\pa{s_0,t_0}$.
@@ -1310,7 +1313,7 @@ Vale:
     \[ C\pa{x^{SO}\pa{R'}} = C\pa{x^{SO}\pa{R}} \]
     da cui la disuguaglianza cercata passando all'estremo inferiore.
   \item In modo analogo al punto precedente, data un'istanza $R\in
-    \mathcal{R}^{aff}$ e una sua sottrete $R_0\subseteq R$ costruiamo
+    \mathcal{R}^{aff}$ e una sua sottorete $R_0\subseteq R$ costruiamo
     l'istanza $R'$; osserviamo che le funzioni costo di $R'$ sono
     tutte affini tranne che per la funzione $l_0$ che abbiamo
     dimostrato nel lemma \ref{lem:l0-concava} essere concava, quindi
@@ -1335,7 +1338,7 @@ e Tardos.
   \ref{teo:roughgarden-tardos}) sappiamo che 
   \[ \inf _{R\in \mathcal{R}^{conv}} \frac{C\pa{ x^{SO}(R)}}{C\pa{
         x^{WE}(R)}} = 0 \]
-  mentre dal primo punto della propozione precendente abbiamo
+  mentre dal primo punto della proposizione precedente abbiamo
   \[ \inf _{\small\begin{matrix}R\in \mathcal{R}^{conv}\\R_0\subseteq
         R\end{matrix}}
     \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \le
@@ -1363,7 +1366,7 @@ e Tardos.
   \[ \inf _{\small\begin{matrix}R\in \mathcal{R}^{aff}\\R_0\subseteq
         R\end{matrix}}
     \frac{C\pa{x^{SO}(R)}}{C\pa{x^{POR}(R,R_0)}} \ge \frac{3}{4} \]    
-  applicando il primo punto della proposizone con $\mathcal{R}' =
+  applicando il primo punto della proposizione con $\mathcal{R}' =
   \mathcal{R}^{aff}$ e utilizzando il teorema di Roughgarden and
   Tardos per funzioni affini abbiamo la tesi.
 \end{proof}
@@ -1395,7 +1398,8 @@ significativi) supponiamo che la nostra rete sia costituita da una
 sorgente, una destinazione e $I$ archi $\mathcal{I} = \set{1,...,I}$
 in parallelo ognuno con una funzione latenza $l_i$ \textbf{convessa},
 \textbf{non decrescente}, \textbf{differenziabile} e \textbf{nulla in
-  $0$}. Un esempio di tale rete è disegnato in figura \ref{fig:provider}
+  zero}. Un esempio di tale rete è disegnato in figura
+\ref{fig:provider}
 
 \begin{figure}[ht]
   \centering
@@ -1454,7 +1458,7 @@ nuovo caso usando le nuove funzioni costo $l_i\pa{x_i} + p_i$ ottenendo
   indichiamo una tale soluzione con $x^{WE}$.
 \end{mydef}
 
-Nella definzione di equilibrio di Wardrop abbiamo inserito l'ultima
+Nella definizione di equilibrio di Wardrop abbiamo inserito l'ultima
 condizione in modo da garantire che venga instradata la massima
 quantità di traffico possibile senza sforare la \textit{reservation
   utility}\footnote{Dovremmo in realtà prevedere anche il caso in cui
@@ -1521,7 +1525,7 @@ casi precedenti, due equilibri di Wardrop possono avere social surplus
 diversi, scriviamo quindi
 \[ \mathbb{S}\pa{x^{WE}} = \max _{x\in W(p)} \mathbb{S}\pa{x} \]
 
-Si può dimostare che questo massimo si raggiunge quando si massimizza
+Si può dimostrare che questo massimo si raggiunge quando si massimizza
 la quantità di traffico effettivamente instradata $\sum _{i\in
   \mathcal{I}} x_i$.
 
@@ -1710,6 +1714,7 @@ scelta, sia dalla strategia scelta dagl'altri giocatori.
       $u_1,u_2$}
     \label{tab:u1u2-matching-pennies}
   \end{table}
+
   Questo metodo tabellare di rappresentare i giochi a due giocatori è
   molto comodo, infatti lo abbiamo usato anche nell'esempio
   \ref{es:pigou-nash}.
@@ -1761,7 +1766,7 @@ giochi, definiamo quindi cos'è una strategia dominante
   Si può vedere che la strategia ``collaborare'' è una
   \textbf{strategia dominante}.
 
-  Osserviamo anche che la strategia (collaborare--collaborare) (che
+  Osserviamo anche che la strategia (collaborare -- collaborare) (che
   massimizza il profitto di ognuno) in realtà non rappresenta il
   massimo guadagno possibile, infatti la strategia (non collaborare --
   non collaborare) dà un guadagno strettamente maggiore ad entrambi i
@@ -1796,13 +1801,13 @@ Vediamo un esempio in cui non è disponibile una strategia dominate
     \label{tab:u1u2-prigioniero-suicidio}
   \end{table}
 
-  In questo caso non c'è una strategia dominante, infatti
-  ``Collaborare'' massimizza il guadagno se l'altro giocatore non
-  collabora, mentre ``non collaborare'' massimizza il guadagno se
-  l'altro giocatore si suicida\footnote{Utilizzando il concetto di
-    \textit{strategia strettamente dominata} potremmo risolvere questo
-    gioco scartando le scelte ``suicidio'', ma non ci serve ai fini
-    della nostra trattazione}.
+  In questo caso non c'è una strategia dominante, infatti ``non
+  collaborare'' massimizza il guadagno se l'altro giocatore si
+  suicidi, mentre ``collaborare'' massimizza il guadagno negli altri
+  casi\footnote{Utilizzando il concetto di \textit{strategia
+      strettamente dominata} potremmo risolvere questo gioco scartando
+    le scelte ``suicidio'', ma non ci serve ai fini della nostra
+    trattazione}.
 
   Osserviamo, però, che se ``suggerissimo'' ai giocatori (informando
   ognuno anche delle scelte suggerite agl'altri) di giocare la
@@ -1813,7 +1818,7 @@ Vediamo un esempio in cui non è disponibile una strategia dominate
 \end{myes}
 
 La possibile esistenza di una strategia ``stabile'' che abbiamo visto
-nell'esempio precedente porta alla definizione di quilibrio di Nash.
+nell'esempio precedente porta alla definizione di equilibrio di Nash.
 
 \begin{mydef}[Equilibrio di Nash]
   Sia  $\pa{\mathcal{I},\pa{S_i}_{i\in\mathcal{I}},
@@ -1825,9 +1830,8 @@ nell'esempio precedente porta alla definizione di quilibrio di Nash.
 
 \begin{myoss}
   Se ogni giocatore ha a disposizione una strategia dominante allora
-  il vettore delle strategie dominanti è un equilibrio di Nash.
-  
-  Il viceversa in generale è falso.
+  il vettore delle strategie dominanti è un equilibrio di Nash. Il
+  viceversa in generale è falso.
 \end{myoss}
 
 L'equilibrio di Nash potrebbe non esistere o esistere ma non essere
