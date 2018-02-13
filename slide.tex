@@ -500,33 +500,33 @@
   sorgente a destinazione.
   \vfill
   
-  Ricordiamo che $p^* \in P^{\mathcal{I}}$ è un equilibrio di Nash se
-  \[ \forall i\in \mathcal{I}\;\; \forall p_i \in P \;\;\;
-    u_i\pa{p^*_i,p^*_{-i}} \le u_i\pa{p_i,p^*_{-i}} \] dove
-  $u_i\pa{p} = \sum _{j\in p_i} m\cdot l(x_j) = \sum_{j\in p_i} l \pa{
-    \sum _{p_k \ni j} m}$ è il costo pagato dall'utente $i$ per
-  percorrere il percorso $p_i$.
+  Ricordiamo che $s^* \in P^{\mathcal{I}}$ è un equilibrio di Nash se
+  \[ \forall i\in \mathcal{I}\;\; \forall s_i \in P \;\;\;
+    u_i\pa{s^*_i,s^*_{-i}} \ge u_i\pa{s_i,s^*_{-i}} \] dove
+  $u_i\pa{s} = - \sum _{j\in s_i} l_j(x_j) = - \sum_{j\in s_i} l_j
+  \pa{ \sum _{s_k \ni j} m}$ è il costo pagato dall'utente $i$ per
+  percorrere il percorso $s_i$.
 
   \begin{myoss}
-    Dato $i$ e fissato $p^*_{-i}$ stiamo minimizzando la funzione
-    \[ p_i \longmapsto u_i\pa{p_i,p^*_{-i}} = \sum_{j\in p_i} l \pa{ m
-        + \sum _{p^*_k \ni j, k\neq i} m}\]
+    Dato $i$ e fissato $s^*_{-i}$ stiamo massimizzando la funzione
+    \[ s_i \longmapsto u_i\pa{s_i,s^*_{-i}} = - \sum_{j\in s_i} l_j
+      \pa{ m + \sum _{s^*_k \ni j, k\neq i} m}\]
   \end{myoss}
 \end{frame}
 
 \begin{frame}{Equilibrio per molti giocatori}
   \begin{myoss}
-    Dato $i$ e fissato $p^*_{-i}$ stiamo minimizzando la funzione
-    \[ p_i \longmapsto u_i\pa{p_i,p^*_{-i}} = \sum_{j\in p_i} l \pa{ m
-        + \sum _{p^*_k \ni j, k\neq i} m}\]
+    Dato $i$ e fissato $s^*_{-i}$ stiamo massimizzando la funzione
+    \[ s_i \longmapsto u_i\pa{s_i,s^*_{-i}} = - \sum_{j\in s_i} l _j
+      \pa{ m + \sum _{s^*_k \ni j, k\neq i} m}\]
   \end{myoss}
-  Dato $p^*_{-i}$ l'utente $i$ sta scegliendo il percorso meno
+  Dato $s^*_{-i}$ l'utente $i$ sta scegliendo il percorso meno
   costoso.
   \vfill
   
-  Se il flusso di ogni utente è molto piccolo (stiamo pensando ad un
-  limite) possiamo quindi dire che il costo dei percorsi scelti sarà
-  (circa) uguale per tutti i giocatori e sarà quello minimo.
+  Se il peso di ogni utente ($m$) è molto piccolo (stiamo pensando ad
+  un limite) possiamo quindi dire che il costo dei percorsi scelti
+  sarà (circa) uguale per tutti i giocatori e sarà quello minimo.
 \end{frame}
 
 \begin{frame}{Equilibrio di Wardrop}
@@ -698,6 +698,20 @@
   \end{proof}
 \end{frame}
 
+\begin{frame}{Costo globale dell'equilibrio di Wardrop}
+  Data un'istanza $R\in \mathcal{R}$, un suo equilibrio di Wardrop
+  $x^{WE}$ e una sua soluzione socialmente ottima si avrà
+  \[ C\pa{x^{WE}} \ge C\pa{x^{SO}} \]
+  \vfill
+  
+  L'equilibrio di Wardrop in generale non è unico, ma si ha:
+  \begin{mypro}
+    Dati due equilibri di Wardrop $x,y$ di $R$ il loro costo globale è
+    uguale:
+    \[ C\pa{x} = C\pa{y} \]
+  \end{mypro}
+\end{frame}
+
 \subsection{Il prezzo dell'anarchia (PoA)}
 
 \begin{frame}{Inefficienza dell'equilibrio}
@@ -707,7 +721,7 @@
 
   Siamo interessati a capire quanto può peggiorare il costo, definiamo
   per ogni rete $R \in \mathcal{R}$ la quantità
-  \[ \frac{C\pa{ x^{SO}}}{C\pa{ x^{WE}}} \]
+  \[ \frac{C\pa{ x^{SO}\pa{R}}}{C\pa{ x^{WE}\pa{R}}} \]
   \begin{block}{Prezzo dell'anarchia (PoA)}
     Dato $\mathcal{R}' \subseteq \mathcal{R}$ siamo interessati alla
     quantità
@@ -1345,23 +1359,6 @@
       \frac{5}{6} \]
   \end{myteo}
 \end{frame}
-
-\begin{frame}{Riferimenti}
-  \begin{itemize}
-  \item I. Menache e A. Ozdaglar, \textit{Network Games}, Morgan \&
-    Claypool Publishers, 2010
-  \item D. Acemoglu, R. Johari e A. Ozdaglar, \textit{Partially
-      Optimal Routing, IEEE Journal on Selected Areas in
-      Communications}, vol. 25, No. 6, August 2007
-  \item D. Acemoglu, A. Ozdaglar, \textit{Competition and Efficiency
-      in Congested Markets, Mathematics of Operations Research},
-    Vol. 32, No. 1, February 2007
-  \item A. Haurie and P. Yarcotte, \textit{On the Relationship between
-      Nash-Cournot and Wardrop Equilibria}, NETWORKS Vol 15(1985)
-    295-308
-  \end{itemize}
-\end{frame}
-
 
 
 \end{document}
